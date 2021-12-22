@@ -8,12 +8,44 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@date-io/date-fns": "1.x",
+    "@emotion/react": "^11.7.1",
+    "@emotion/styled": "^11.6.0",
+    "@material-ui/pickers": "^3.3.10",
+    "@mui/icons-material": "^5.2.5",
+    "@mui/lab": "^5.0.0-alpha.61",
+    "@mui/material": "^5.2.5",
+    "@mui/styles": "^5.2.3",
+    "assets": "^3.0.1",
+    "axios": "^0.24.0",
+    "date-fns": "^2.27.0",
+    "dotenv": "^10.0.0",
+    "framer-motion": "^5.5.5",
+    "js-cookie": "^3.0.1",
+    "moment": "^2.29.1",
     "next": "12.0.7",
+    "next-compose-plugins": "^2.2.1",
+    "next-images": "^1.8.4",
+    "next-seo": "^4.28.1",
+    "next-videos": "^1.4.0",
+    "prop-types": "^15.8.0",
     "react": "17.0.2",
-    "react-dom": "17.0.2"
+    "react-count-to": "^0.12.0",
+    "react-dom": "17.0.2",
+    "react-dropzone": "^11.4.2",
+    "react-query": "^3.34.5",
+    "react-redux": "^7.2.6",
+    "react-slick": "^0.28.1",
+    "redux": "^4.1.2",
+    "redux-devtools-extension": "^2.13.9",
+    "redux-thunk": "^2.4.1",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
+    "autoprefixer": "^10.4.0",
     "eslint": "8.5.0",
-    "eslint-config-next": "12.0.7"
+    "eslint-config-next": "12.0.7",
+    "postcss": "^8.4.5",
+    "tailwindcss": "^3.0.7"
   }
 }

@@ -1,0 +1,26 @@
+{
+  "title": "Alumni - Reconnecting",
+  "titleTemplate": "%s - Miastudios inc",
+  "description": "Redefining and reconnecting friends of the past, restoring hope in humanity",
+  "openGraph": {
+    "title": "Alumni - Your Reconnection is assured",
+    "description": "Stay up to date with current happenings and outside the campus in which you graduated from and stay in touch with friends, make fun merry and enjoy...",
+    "type": "website",
+    "locale": "en_IE",
+    "url": "https://nextjs.org/commerce",
+    "site_name": "quizbox",
+    "images": [
+      {
+        "url": "/card.png",
+        "width": 800,
+        "height": 600,
+        "alt": "Alumni"
+      }
+    ]
+  },
+  "twitter": {
+    "handle": "@alumni",
+    "site": "alumni.com",
+    "cardType": "summary_large_image"
+  }
+}
