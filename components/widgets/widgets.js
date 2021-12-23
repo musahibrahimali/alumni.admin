@@ -15,7 +15,6 @@ export {
     ActionButton,
     UseForm,
     FormButton,
-    DatePicker,
     DropDown,
     CheckBox,
     RadioControls,

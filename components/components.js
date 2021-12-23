@@ -11,7 +11,6 @@ export {
     CheckBox,
     UseTable,
     DropDown,
-    DatePicker,
     UseForm,
     InputField,
     FormButton,
