@@ -1,7 +1,7 @@
 import axios from "axios";
 
 // register an admin
-const registerAdmin = async (values) => {
+export const registerAdmin = async (values) => {
     const url = "http://localhost:5000/admin/register";
     const data = values;
     const response = await axios({
@@ -16,7 +16,7 @@ const registerAdmin = async (values) => {
 }
 
 // log in admin
-const loginAdmin = async (values) => {
+export const loginAdmin = async (values) => {
     const url = "http://localhost:5000/admin/login";
     const data = values;
     const response = await axios({
@@ -29,9 +29,3 @@ const loginAdmin = async (values) => {
     });
     return response.json();
 }
-
-
-module.exports = {
-    registerAdmin,
-    loginAdmin,
-};

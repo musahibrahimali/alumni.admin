@@ -9,4 +9,5 @@ export {
     ForgotPasswordPage,
     ErrorPage,
     DashboardPage,
+    CreatePage,
 } from './Pages/pages';

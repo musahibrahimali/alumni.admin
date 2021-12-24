@@ -1,8 +1,8 @@
-import React from 'react'
+import React from 'react';
 
 const DashboardPage = () => {
     return (
-        <div>
+        <div className="bg-white dark:bg-gray-900 h-full w-full">
 
         </div>
     )

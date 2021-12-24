@@ -1,9 +1,7 @@
 import React, { useState } from 'react';
-import { AllUsersStyles } from "./styles/usersStyles";
 import {
     ActionButton,
     ConfirmDialog,
-    FormButton,
     InputField,
     Notification,
     PopUp,
@@ -11,16 +9,13 @@ import {
 } from "../../../components";
 import {
     InputAdornment,
-    Paper,
     TableBody,
     TableCell,
     TableRow,
-    Toolbar
 } from "@mui/material";
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import AddIcon from '@mui/icons-material/Add';
 import { useRouter } from "next/router";
 
 const users = [
@@ -88,7 +83,6 @@ const users = [
 
 const AllEventsTable = () => {
     const router = useRouter();
-    const styles = AllUsersStyles();
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
@@ -177,10 +171,10 @@ const AllEventsTable = () => {
         <>
             <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg">
                 <div className="mx-4 px-4 pt-14">
-                    <Toolbar>
+                    <div className="flex">
                         <InputField
                             label="Search"
-                            className={styles.searchInput}
+                            className="w-full"
                             InputProps={{
                                 startAdornment: (
                                     <InputAdornment position="start">
@@ -190,14 +184,7 @@ const AllEventsTable = () => {
                             }}
                             onChange={handleSearch}
                         />
-                        <FormButton
-                            text="Add New"
-                            variant="outlined"
-                            startIcon={<AddIcon />}
-                            className={styles.newButton}
-                            onClick={handleOpenPopUP}
-                        />
-                    </Toolbar>
+                    </div>
 
                     <TableContainer>
                         <TableHeader />

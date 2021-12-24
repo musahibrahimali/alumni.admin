@@ -9,6 +9,7 @@ export {
     ForgotPasswordPage,
     ErrorPage,
     DashboardPage,
+    CreatePage,
 } from './ui/ui';
 
 export {
