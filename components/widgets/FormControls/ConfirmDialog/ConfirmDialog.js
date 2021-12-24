@@ -1,16 +1,16 @@
 import React from 'react';
-import {ConfirmDialogStyles} from "./ConfirmDialogStyles";
-import {Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography} from "@mui/material";
-import {FormButton} from "../controls";
+import { ConfirmDialogStyles } from "./ConfirmDialogStyles";
+import { Dialog, DialogActions, DialogContent, DialogTitle, IconButton, Typography } from "@mui/material";
+import { FormButton } from "../controls";
 import NotListedLocationOutlinedIcon from '@mui/icons-material/NotListedLocationOutlined';
 
 const ConfirmDialog = (props) => {
 
     const styles = ConfirmDialogStyles();
-    const {confirmDialog, setConfirmDialog} = props;
+    const { confirmDialog, setConfirmDialog } = props;
 
     return (
-        <Dialog classes={{paper: styles.dialog}} open={confirmDialog.isOpen}>
+        <Dialog classes={{ paper: styles.dialog }} open={confirmDialog.isOpen}>
             <DialogTitle className={styles.dialogTitle}>
                 <IconButton className={styles.titleIcon} disableRipple>
                     <NotListedLocationOutlinedIcon />
@@ -29,7 +29,7 @@ const ConfirmDialog = (props) => {
                     text="No"
                     color="primary"
                     variant="outlined"
-                    onClick={() => setConfirmDialog({...confirmDialog, isOpen: false})}
+                    onClick={() => setConfirmDialog({ ...confirmDialog, isOpen: false })}
                 />
                 <FormButton
                     text="Yes"

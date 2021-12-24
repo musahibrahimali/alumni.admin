@@ -5,7 +5,7 @@ import { CopyRight, ToggleButton } from "../../widgets/widgets";
 const Footer = () => {
     return (
         <>
-            <footer className="bg-black dark:bg-gray-900 z-40">
+            <footer className="bg-black dark:bg-gray-900 bottom-0">
                 <div className="max-w-screen-xl mx-auto">
                     {/* details section */}
                     <div className="px-6 py-12 mx-auto">

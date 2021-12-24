@@ -8,6 +8,7 @@ module.exports = {
     content: [
       './pages/**/*.{js,ts,jsx,tsx}',
       './components/**/*.{js,ts,jsx,tsx}',
+      './public/index.html',
     ],
     options: {
       safelist: {
@@ -20,13 +21,17 @@ module.exports = {
     extend: {
       // extend font family
       fontFamily: {
-        'sans': ['Roboto', "ui-sans-serif", "BlinkMacSystemFont", "Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"]
+        'sans': ['Roboto', "ui-sans-serif", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+        serif: ['"Roboto Slab"', 'serif', "ui-sans-serif", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
+        body: ['Roboto', 'sans-serif', "ui-sans-serif", "-apple-system", "BlinkMacSystemFont", "Segoe UI", "Helvetica Neue", "Arial", "Noto Sans", "sans-serif", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"],
       },
       /* background image */
       backgroundImage: theme => ({
-        'hero-section': "url('https://source.unsplash.com/random')",
-        'mission': "url('https://source.unsplash.com/random')",
+        'frosty-schene': "url('/assets/images/background-2.jpg')",
+        'snowy-mountain': "url('/assets/images/background-1.jpg')",
+        'error': "url('/assets/animation/dribbble_1.gif')",
         'error-page': "url('https://cdn.dribbble.com/users/285475/screenshots/2083086/dribbble_1.gif')",
+        'forgot-password': "url('https://source.unsplash.com/oWTW-jNGl9I/600x800')",
       }),
       /* add to max width */
       maxWidth: {
@@ -36,6 +41,7 @@ module.exports = {
       height: {
         'hero-section': "40rem",
         'banner': '30rem',
+        'custom': '50rem'
       },
       /* colors */
       colors: {
@@ -46,6 +52,9 @@ module.exports = {
         },
         'events-color': '#ECF1F5',
         'blog-color': '#F0F2F5',
+        'error-bg': '#007aff',
+        'deep-yellow': "#FA8A00",
+        'light-blue': "#03A9F4",
       },
       /* animations */
       animation: {

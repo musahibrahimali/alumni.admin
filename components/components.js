@@ -1,8 +1,14 @@
-export { HeadTag } from './config/config'; // seo configurations files
-export { default as Layout } from './layout/Layout'; // layout of the app
-
+export { default as PageChange } from './PageChange/PageChange';
 export {
     Footer,
+    Sidebar,
+    AdminNavbar,
+    LoginPage,
+    DataTablePage,
+    RegisterPage,
+    ForgotPasswordPage,
+    ErrorPage,
+    DashboardPage,
 } from './ui/ui';
 
 export {

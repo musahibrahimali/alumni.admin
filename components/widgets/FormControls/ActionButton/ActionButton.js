@@ -2,10 +2,10 @@ import React from 'react';
 import { Button } from "@mui/material";
 
 const ActionButton = (props) => {
-    const { children, onClick } = props;
+    const { children, onClick, classes } = props;
 
     return (
-        <div className="bg-gray-200">
+        <div className={classes}>
             <Button onClick={onClick}>
                 {children}
             </Button>

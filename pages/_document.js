@@ -16,11 +16,16 @@ export default class MyDocument extends Document {
                         rel="stylesheet"
                         href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700&display=swap"
                     />
-
+                    {/*  Material Icons Link */}
+                    <link
+                        href="https://fonts.googleapis.com/icon?family=Material+Icons"
+                        rel="stylesheet"
+                    />
                 </Head>
                 <body>
-                <Main />
-                <NextScript />
+                    <div id="page-transition"></div>
+                    <Main />
+                    <NextScript />
                 </body>
             </Html>
         );
