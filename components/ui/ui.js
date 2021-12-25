@@ -10,4 +10,6 @@ export {
     ErrorPage,
     DashboardPage,
     CreatePage,
+    SettingsForm,
+    ProfilePage,
 } from './Pages/pages';

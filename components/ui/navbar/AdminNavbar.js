@@ -32,9 +32,11 @@ const AdminNavbar = () => {
     return (
         <header className="bg-white header navbar_t z-50 dark:bg-gray-900 sticky top-0 w-full py-2 px-4">
             <div className="flex flex-row justify-between items-center">
-                <h1 className="text-gray-700 dark:text-gray-200 font-extrabold text-xl md:text-2xl">
-                    Alumni
-                </h1>
+                <Link href="/admin/dashboard">
+                    <a className="text-gray-700 dark:text-gray-200 font-extrabold text-xl md:text-2xl cursor-pointer">
+                        Alumni
+                    </a>
+                </Link>
                 <ul className="flex flex-row justify-between space-x-2">
                     <li>
                         <form onSubmit={onSubmit} className="flex items-center max-w-md mx-auto bg-gray-200 rounded-full">

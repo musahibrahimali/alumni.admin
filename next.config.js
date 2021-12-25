@@ -22,6 +22,7 @@ module.exports = {
       'picsum.photos',
       'static.xx.fbcdn.net',
       "cdn.dribbble.com",
+      "images.unsplash.com",
     ],
   },
   plugins: withPlugins([withVideos, {}]),

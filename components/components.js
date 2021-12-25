@@ -10,6 +10,8 @@ export {
     ErrorPage,
     DashboardPage,
     CreatePage,
+    SettingsForm,
+    ProfilePage,
 } from './ui/ui';
 
 export {

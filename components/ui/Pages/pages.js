@@ -5,3 +5,5 @@ export { default as ForgotPasswordPage } from './ForgotPasswordPage';
 export { default as ErrorPage } from './ErrorPage';
 export { default as DashboardPage } from './dashboard/DashboardPage';
 export { default as CreatePage } from './create/CreatePage';
+export { default as SettingsForm } from './SettingsForm';
+export { default as ProfilePage } from './ProfilePage';
