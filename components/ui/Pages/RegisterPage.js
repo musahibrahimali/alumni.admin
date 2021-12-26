@@ -1,5 +1,10 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Link from 'next/link';
+import { setUser } from '../../../provider/provider';
+import { Notification } from '../../components';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
+import { useDispatch } from 'react-redux';
 
 const initialValues = {
     firstName: "",
@@ -10,8 +15,13 @@ const initialValues = {
 }
 
 const RegisterPage = () => {
-    const [isVisible, setIsVisible] = React.useState(false);
-    const [values, setValues] = React.useState(initialValues);
+    const [isVisible, setIsVisible] = useState(false);
+    const [values, setValues] = useState(initialValues);
+    const [isLoading, setIsLoading] = useState(false);
+    const [errors, setErrors] = useState({}); // errors if any
+    const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
+    const router = useRouter();
+    const dispatch = useDispatch();
     // handle input change
     const handleChange = (event) => {
         event.preventDefault();
@@ -25,9 +35,68 @@ const RegisterPage = () => {
     }
 
     // handle submit
-    const handleSubmit = (event) => {
+    const handleSubmit = async (event) => {
         event.preventDefault();
-        console.log(values);
+        setIsLoading(true);
+        const url = "http://localhost:5000/admin/signup";
+        const data = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            phoneNumber: values.phoneNumber,
+            emailAddress: values.emailAddress,
+            password: values.password,
+        }
+        const response = await fetch(url, {
+            method: 'POST',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json',
+                'accept': '*/*',
+                'access-control-allow-origin': '*',
+            },
+            body: JSON.stringify(data),
+        });
+        const admin = await response.json();
+        if (response.status === 200) {
+            if (admin.admin) {
+                dispatch(setUser(admin.admin));
+                Cookies.set('user', true);
+                setIsLoading(false);
+                setValues(initialValues);
+                setNotify({ isOpen: true, message: "Successfully registered", type: "success" });
+                router.replace("/admin/dashboard");
+            }
+        } else {
+            setNotify({ isOpen: true, message: "Failed to register", type: "error" });
+            if (admin.errors) {
+                setIsLoading(false);
+                if (admin.errors.email) {
+                    setErrors({
+                        ...errors,
+                        emailAddress: admin.errors.email
+                    });
+                }
+
+                if (admin.errors.password) {
+                    setErrors({
+                        ...errors,
+                        password: admin.errors.password
+                    });
+                }
+                if (admin.errors.firstName) {
+                    setErrors({
+                        ...errors,
+                        firstName: admin.errors.firstName
+                    });
+                }
+                if (admin.errors.lastName) {
+                    setErrors({
+                        ...errors,
+                        lastName: admin.errors.lastName
+                    });
+                }
+            }
+        }
     }
 
     return (
@@ -124,12 +193,26 @@ const RegisterPage = () => {
                                     </div>
                             }
                         </div>
-                        <button
-                            onClick={handleSubmit}
-                            type="submit"
-                            className="block w-full bg-indigo-700 hover:bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 dark:bg-white dark:text-gray-700 dark:hover:bg-gray-200">
-                            Register
-                        </button>
+                        {
+                            !isLoading ?
+                                <button
+                                    onClick={handleSubmit}
+                                    type="submit"
+                                    className="block w-full bg-indigo-700 hover:bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2 dark:bg-white dark:text-gray-700 dark:hover:bg-gray-200">
+                                    Register
+                                </button> :
+                                <div className="flex justify-around">
+                                    <span className="inline-flex bg-pink-600 mb-2 rounded-md shadow-sm">
+                                        <button type="button" className="inline-flex items-center px-4 py-2 border border-transparent text-base leading-6 font-medium rounded-md text-white bg-rose-600 hover:bg-rose-500 focus:border-rose-700 active:bg-rose-700 transition ease-in-out duration-150 cursor-not-allowed" disabled="">
+                                            <svg className="animate-spin -ml-1 mr-3 h-5 w-5 text-white" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24">
+                                                <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4"></circle>
+                                                <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"></path>
+                                            </svg>
+                                            Processing
+                                        </button>
+                                    </span>
+                                </div>
+                        }
                         <div className="flex pt-2 justify-between items-center">
                             <Link href="/admin/login">
                                 <a className="text-sm ml-2 hover:text-blue-500 cursor-pointer">
@@ -140,6 +223,12 @@ const RegisterPage = () => {
                     </form>
                 </div>
             </div>
+
+            {/* Action Notification */}
+            <Notification
+                notify={notify}
+                setNotify={setNotify}
+            />
         </>
     )
 }

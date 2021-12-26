@@ -2,11 +2,18 @@ import React, { useEffect } from 'react';
 import Link from "next/link";
 import { Avatar } from "@mui/material";
 import { useState } from "react";
+import { useDispatch, useSelector } from 'react-redux';
+import Cookies from 'js-cookie';
+import { setUser } from '../../../provider/provider';
 
 
 const AdminNavbar = () => {
     const [search, setSearch] = useState("");
     const [showSearch, setShowSearch] = useState(false);
+    const user = useSelector((state) => state.user.user);
+    const isAuth = Cookies.get("user");
+    const dispatch = useDispatch();
+    // console.log(user.image);
 
     const onSearchChange = (event) => {
         event.preventDefault();
@@ -19,6 +26,25 @@ const AdminNavbar = () => {
     }
 
     useEffect(() => {
+        const fetchInitialAdmin = async () => {
+            const url = "http://localhost:5000/admin/initial";
+            const response = await fetch(url, {
+                method: 'GET',
+                credentials: 'include',
+                headers: {
+                    'Content-Type': 'application/json'
+                }
+            });
+            const admin = await response.json();
+            if (response.status === 200) {
+                dispatch(setUser(admin.admin));
+            } else {
+                if (admin.status === 401) {
+                    Cookies.remove("user");
+                    dispatch(setUser(null));
+                }
+            }
+        }
         const handleShowSearch = () => {
             if (search.length > 0) {
                 setShowSearch(true);
@@ -27,7 +53,11 @@ const AdminNavbar = () => {
             }
         }
         handleShowSearch();
-    }, [search]);
+        if (isAuth) {
+            fetchInitialAdmin();
+        }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
+    }, [search, isAuth]);
 
     return (
         <header className="bg-white header navbar_t z-50 dark:bg-gray-900 sticky top-0 w-full py-2 px-4">
@@ -66,14 +96,30 @@ const AdminNavbar = () => {
                             </div>
                         </form>
                     </li>
-                    <li className="bg-transparent hover:bg-gray-200 rounded-full dark:text-gray-200 dark:hover:text-gray-700 px-2 py-1">
-                        <Link href="/admin/dashboard">
-                            <a className="flex space-x-2 justify-center items-center">
-                                <p>Musah</p>
-                                <Avatar fontSize="small" />
-                            </a>
-                        </Link>
-                    </li>
+                    {
+                        user ?
+                            <li className="bg-transparent hover:bg-gray-200 rounded-full dark:text-gray-200 dark:hover:text-gray-700 px-2 py-1">
+                                <Link href="/admin/dashboard">
+                                    <a className="flex space-x-2 justify-center items-center">
+                                        <p>{user?.displayName}</p>
+                                        <Avatar
+                                            src={user?.image}
+                                            fontSize="small"
+                                        />
+                                    </a>
+                                </Link>
+                            </li> :
+                            <li className="bg-transparent hover:bg-gray-200 rounded-full dark:text-gray-200 dark:hover:text-gray-700 px-2 py-1">
+                                <Link href="/admin/dashboard">
+                                    <a className="flex space-x-2 justify-center items-center">
+                                        <p>Guest</p>
+                                        <Avatar
+                                            fontSize="small"
+                                        />
+                                    </a>
+                                </Link>
+                            </li>
+                    }
                 </ul>
             </div>
         </header>

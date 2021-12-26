@@ -254,14 +254,14 @@ const CreateEventForm = () => {
                             placeholder="Event Description"
                         />
                         {/* image preview after drag and drop or select */}
-                        <div className="bg-gray-50 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col justify-center items-center cursor-pointer relative py-2 px-2">
+                        <div className="bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col justify-center items-center cursor-pointer relative py-2 px-2">
                             {/* show the default background and content if no media has been loaded */}
                             {
                                 isMed &&
                                 <div>
                                     <div {...getRootProps({ className: "dropzone" })}>
                                         <input {...getInputProps()} />
-                                        <div className="text-black hover:text-blue-600 flex flex-row justify-between items-center rounded-md px-4 py-2 w-full">
+                                        <div className="text-gray-700 dark:text-gray-200 hover:text-blue-600 flex flex-row justify-between items-center rounded-md px-4 py-2 w-full">
                                             <div className="bg-gray-300 mx-2 rounded-full">
                                                 <IconButton>
                                                     <AddToPhotosOutlinedIcon className="text-blue-600 dark:text-blue-400" fontSize='medium' />
@@ -290,7 +290,7 @@ const CreateEventForm = () => {
                             }
                         </div>
                         <div className="flex flex-col space-y-2 px-4 justify-center">
-                            <h3 className="text-center text-lg">
+                            <h3 className="text-center text-lg text-gray-700 dark:text-gray-200">
                                 Guest &amp; Host
                             </h3>
                             <div className="flex flex-row justify-bwteen items-center">
