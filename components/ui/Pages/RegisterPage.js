@@ -101,7 +101,7 @@ const RegisterPage = () => {
 
     return (
         <>
-            <div className="bg-snowy-mountain h-screen w-full flex flex-col justify-center items-center py-2">
+            <div className="bg-snowy-mountain h-full w-full flex flex-col justify-center bg-cover bg-no-repeat items-center py-36">
                 <div className="relative origin-top flex w-1/2 justify-center items-center bg-white shadow-md dark:bg-gray-900 py-24 px-4 rounded-md ">
                     <div className="absolute -top-10 bg-error-bg text-white w-80 flex justify-center items-center shadow-lg px-12 py-4 rounded-md">
                         <h1 className="font-bold text-lg md:text-4xl mb-1">

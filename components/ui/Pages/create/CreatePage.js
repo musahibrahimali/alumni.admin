@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import CreateEventForm from './CreateEvent';
 import CreateMenuItem from './MenuItem';
 import CreateJobForm from './CreateJob';
-import RegisterBlogger from './RegisterBlogger';
+import CreateBlogForm from './CreateBlog';
 
 const CreatePage = () => {
     const [isEventActive, setIsEventActive] = useState(true);
@@ -72,7 +72,7 @@ const CreatePage = () => {
             </div>
 
             {/* body */}
-            <div className="bg-snowy-mountain h-full w-full flex justify-center items-center px-8 py-8">
+            <div className="bg-snowy-mountain bg-cover bg-no-repeat h-full w-full flex justify-center items-center px-8 py-28">
                 {
                     isEventActive &&
                     <div>
@@ -88,7 +88,7 @@ const CreatePage = () => {
                 {
                     isBloggerActive &&
                     <div>
-                        <RegisterBlogger />
+                        <CreateBlogForm />
                     </div>
                 }
             </div>

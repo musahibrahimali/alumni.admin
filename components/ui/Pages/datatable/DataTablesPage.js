@@ -1,5 +1,4 @@
 import React from 'react';
-import AllBloggersTable from './bloggers';
 import TableItem from './TableItem';
 import AllEventsTable from './events';
 import AllJobsTable from './jobs';
@@ -8,11 +7,6 @@ import AllBlogsTable from './blogs';
 const DataTablePage = () => {
     return (
         <div className="bg-light-blue px-4 flex-grow">
-            {/* all bloggers */}
-            <TableItem
-                title="All Bloggers"
-                table={<AllBloggersTable />}
-            />
             {/* all blogs */}
             <TableItem
                 title="All Blogs"

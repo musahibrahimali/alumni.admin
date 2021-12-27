@@ -3,7 +3,7 @@ import React from 'react';
 
 const ForgotPasswordPage = () => {
     return (
-        <div className="font-sans bg-frosty-schene flex justify-center items-center bg-cover bg-no-repeat h-screen w-full">
+        <div className="font-sans bg-frosty-schene flex justify-center items-center bg-cover bg-no-repeat h-full py-40 w-full">
             <div className="container mx-auto">
                 <div className="flex justify-center px-6 my-12">
                     <div className="w-full xl:w-3/4 lg:w-11/12 flex">

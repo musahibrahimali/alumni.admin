@@ -7,7 +7,7 @@ const PreviewMedia = (data) => {
     const [isMedia, setIsMedia] = useState(false);
 
     useEffect(() => {
-        if (images.length <= 0 || videos.length <= 0) {
+        if (images?.length <= 0 || videos?.length <= 0) {
             setIsMedia(false);
         } else {
             setIsMedia(true);
@@ -26,7 +26,7 @@ const PreviewMedia = (data) => {
 
                 <div className=" px-8 py-12 flex justify-center items-center text-gray-700 dark:text-gray-200">
                     <h2>
-                        {!isMedia ? "" : "No Images or videos to preview"}
+                        {!isMedia ? "" : ""}
                     </h2>
                 </div>
 

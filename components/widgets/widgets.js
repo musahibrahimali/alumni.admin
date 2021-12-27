@@ -18,4 +18,6 @@ export {
     DropDown,
     CheckBox,
     RadioControls,
+    DatePicker,
+    TimePicker,
 } from './FormControls/controls';

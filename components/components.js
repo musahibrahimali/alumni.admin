@@ -33,4 +33,5 @@ export {
     AnimationContainer,
     LinearWithValueLabel,
     LinearColor,
+    DatePicker,
 } from './widgets/widgets';

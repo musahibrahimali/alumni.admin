@@ -5,9 +5,7 @@ import Admin from '../../layout/Admin';
 const Profile = () => {
     return (
         <>
-            <div className="w-full h-screen">
-                <ProfilePage />
-            </div>
+            <ProfilePage />
         </>
     );
 }

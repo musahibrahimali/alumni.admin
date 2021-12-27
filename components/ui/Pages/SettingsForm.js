@@ -23,7 +23,7 @@ const SettingsForm = () => {
 
     return (
         <>
-            <div className="bg-frosty-schene py-4 px-8 bg-cover bg-no-repeat w-full h-full flex flex-col justify-center items-center">
+            <div className="bg-frosty-schene py-44 px-8 bg-cover bg-no-repeat w-full h-full flex flex-col justify-center items-center">
                 <section className="relative w-full top-0 origin-top max-w-4xl p-6 mx-auto bg-white rounded-md shadow-xl flex justify-center items-center dark:bg-gray-800">
                     <div className="absolute -top-8 flex justify-center items-center px-12 py-4 text-white dark:text-white font-bold shadow-lg bg-error-bg rounded-md">
                         <h2 className="text-lg font-semibold capitalize">

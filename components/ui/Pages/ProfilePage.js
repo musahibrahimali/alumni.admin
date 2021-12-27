@@ -22,7 +22,7 @@ const ProfilePage = () => {
 
     return (
         <>
-            <div className="bg-frosty-schene py-4 px-8 bg-cover bg-no-repeat w-full h-full flex flex-col justify-center items-center">
+            <div className="bg-frosty-schene py-52 px-8 bg-cover bg-no-repeat w-full h-full flex flex-col justify-center items-center">
                 <section className="relative w-full top-0 origin-top max-w-4xl p-6 mx-auto bg-white rounded-md shadow-xl flex justify-center items-center dark:bg-gray-800">
                     <div className="absolute -top-20 flex justify-center items-center shadow-lg rounded-full border-4 border-error-bg mb-4">
                         <Image

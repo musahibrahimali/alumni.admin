@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import { InputField } from '../../../components';
 
 const initialValues = {
     firstName: "",
@@ -10,21 +11,20 @@ const GuestForm = (props) => {
     const { addGuest, setGuestPopUp } = props;
     const [values, setValues] = useState(initialValues);
     const [profile, setProfile] = useState(null);
-    const [selectedFile, setSelectedFile] = useState(null);
     const [errors, setErrors] = useState({});
-    const data = {
-        firstName: values.firstName,
-        lastName: values.lastName,
-        position: values.position,
-        profile: profile
-    }
+
     const onSubmit = (event) => {
         event.preventDefault();
         if (values !== initialValues) {
+            const data = {
+                firstName: values.firstName,
+                lastName: values.lastName,
+                position: values.position,
+                profile: profile
+            }
             addGuest(data);
             setValues(initialValues);
             setProfile(null);
-            setSelectedFile(null);
             setGuestPopUp(false);
         } else {
             validateForm();
@@ -61,8 +61,15 @@ const GuestForm = (props) => {
         const fileReader = new FileReader();
         const files = event.target.files;
         const file = files[0];
-        setSelectedFile(file);
         fileReader.onload = (event) => {
+            // check filesize is greater than 16mb
+            if (file.size > 16777216) {
+                setErrors({
+                    ...errors,
+                    profile: "Profile image must be less than 16mb"
+                });
+                return;
+            }
             setProfile(event.target.result);
         }
         fileReader.readAsDataURL(file);
@@ -122,17 +129,16 @@ const GuestForm = (props) => {
                     </div>
                     <p className="text-red-600">{errors.position}</p>
                 </div>
-                <div className="flex w-full items-center border-2 py-2 border-gray-200 dark:border-gray-700 px-3 rounded-2xl mb-4">
-                    <input
-                        className="pl-2 outline-none border-none bg-transparent w-full text-gray-700 dark:text-gray-200"
-                        type="file"
+                <div className="flex w-full items-center px-3 rounded-2xl mb-4">
+                    <InputField
+                        className="w-full"
                         name="profile"
-                        id="profile"
+                        type="file"
                         accept='image/*'
                         onChange={selectImage}
                         placeholder="Profile Picture"
                     />
-                    <p className="text-gray-700 dark:text-gray-200">{selectedFile?.filename}</p>
+                    <p className="text-red-600">{errors.profile}</p>
                 </div>
                 <button
                     onClick={onSubmit}

@@ -11,6 +11,7 @@ function DropDown(props) {
             >
                 <InputLabel>{label}</InputLabel>
                 <Select
+                    className="w-[400px]"
                     name={name}
                     label={label}
                     value={value}

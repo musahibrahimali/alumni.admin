@@ -10,3 +10,5 @@ export { default as PopUp } from "./PopUp/PopUp";
 export { default as ActionButton } from './ActionButton/ActionButton';
 export { default as Notification } from './Notification/Notification';
 export { default as ConfirmDialog } from './ConfirmDialog/ConfirmDialog';
+export { default as DatePicker } from "./DatePicker/DatePicker";
+export { default as TimePicker } from "./TimePicker/TimePicker";
