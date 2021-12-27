@@ -304,7 +304,7 @@ const CreateBlogForm = () => {
 
     return (
         <>
-            <div className="relative top-0 mt-10 origin-top bg-white dark:bg-gray-900 flex flex-col justify-center items-center w-full h-full px-4 shadow-lg rounded-lg">
+            <div className="relative top-0 mt-10 origin-top bg-white dark:bg-gray-50 flex flex-col justify-center items-center w-full h-full px-4 shadow-lg rounded-lg">
                 <div className="absolute -top-11 rounded-md bg-error-bg px-8 text-white font-sans font-extrabold py-2">
                     <h1 className="text-6xl">
                         Create Blog

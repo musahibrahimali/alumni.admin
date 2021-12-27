@@ -279,7 +279,7 @@ const CreateEventForm = () => {
 
     return (
         <>
-            <div className="relative top-0 mt-8 origin-top bg-white dark:bg-gray-900 flex flex-col justify-center items-center w-full h-full px-4 shadow-lg rounded-lg">
+            <div className="relative top-0 mt-8 origin-top bg-white dark:bg-gray-200 flex flex-col justify-center items-center w-full h-full px-4 shadow-lg rounded-lg">
                 <div className="absolute -top-10 rounded-md bg-error-bg px-8 text-white font-sans font-extrabold py-1">
                     <h1 className="text-6xl">
                         Create Event
