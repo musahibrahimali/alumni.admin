@@ -34,4 +34,6 @@ export {
     LinearWithValueLabel,
     LinearColor,
     DatePicker,
+    TimePicker,
+    FacebookCircularProgress,
 } from './widgets/widgets';
