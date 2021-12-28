@@ -1,8 +1,10 @@
-import { Avatar, IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import Image from 'next/image';
+import PreviewMedia from './PreviewMedia';
+import axios from 'axios';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
+import { IconButton } from '@mui/material';
 import {
     CopyRight,
     DatePicker,
@@ -11,15 +13,13 @@ import {
     PopUp,
     UseForm,
 } from "../../../components";
-import PreviewMedia from './PreviewMedia';
-import axios from 'axios';
-import Image from 'next/image';
 
 const initialValues = {
     jobTitle: "",
     jobSnippet: "",
     jobDescription: "",
     jobLocation: "",
+    companyName: "",
     companyUrl: "",
     expireDate: new Date(),
 }
@@ -31,9 +31,6 @@ const CreateJobForm = () => {
     const [previewImages, setPreviewImages] = useState([]);
     const [logo, setLogo] = useState(null);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
-    // get user id from redux
-    const user = useSelector((state) => state.user.user);
-    const userId = user?.userId;
 
     const onLogoChange = (event) => {
         event.preventDefault();
@@ -89,6 +86,9 @@ const CreateJobForm = () => {
         if ('comapnyUrl' in fieldValues) {
             temp.comapnyUrl = fieldValues.comapnyUrl ? "" : "This Field is Required";
         }
+        if ('comapnyName' in fieldValues) {
+            temp.comapnyName = fieldValues.comapnyName ? "" : "This Field is Required";
+        }
         if ('expireDate' in fieldValues) {
             temp.expireDate = fieldValues.expireDate ? "" : "This Field is Required";
         }
@@ -115,6 +115,7 @@ const CreateJobForm = () => {
             formData.append('jobLocation', values.jobLocation);
             formData.append('expireDate', values.expireDate);
             formData.append('companyUrl', values.companyUrl);
+            formData.append('companyName', values.companyName);
             formData.append('companyLogo', logo);
             acceptedFiles.forEach((file) => {
                 if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
@@ -144,6 +145,7 @@ const CreateJobForm = () => {
                     message: "Job Created Successfully",
                     type: "success"
                 });
+                resetForm();
             } else {
                 setNotify({
                     isOpen: true,
@@ -168,7 +170,8 @@ const CreateJobForm = () => {
     }
 
     // handle preview popup
-    const handlePreview = () => {
+    const handlePreview = (event) => {
+        event.preventDefault();
         previewMedia();
         setPreviewPopUp(!previewPopUp);
     }
@@ -250,7 +253,7 @@ const CreateJobForm = () => {
                         Create Job
                     </h1>
                 </div>
-                <form onSubmit={onSubmit} className="grid grid-cols-6 w-full h-full px-8 py-12 space-x-4">
+                <form className="grid grid-cols-6 w-full h-full px-8 py-12 space-x-4">
                     {/* first column */}
                     <div className="col-span-3 w-full space-y-8">
                         <InputField
@@ -269,6 +272,15 @@ const CreateJobForm = () => {
                             value={values.jobLocation}
                             onChange={handleInputChange}
                             error={errors.jobLocation}
+                        />
+
+                        <InputField
+                            className="w-full"
+                            name="companyName"
+                            placeholder="Company Name"
+                            value={values.companyName}
+                            onChange={handleInputChange}
+                            error={errors.companyName}
                         />
 
                         <InputField

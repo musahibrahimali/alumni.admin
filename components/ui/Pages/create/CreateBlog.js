@@ -1,7 +1,8 @@
-import { Avatar, IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import PreviewMedia from './PreviewMedia';
+import axios from 'axios';
+import { IconButton } from '@mui/material';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
 import {
@@ -13,8 +14,6 @@ import {
     PopUp,
     UseForm,
 } from "../../../components";
-import PreviewMedia from './PreviewMedia';
-import axios from 'axios';
 
 const getBlogCategories = () => ([
     {
@@ -218,7 +217,8 @@ const CreateBlogForm = () => {
     }
 
     // handle preview popup
-    const handlePreview = () => {
+    const handlePreview = (event) => {
+        event.preventDefault();
         previewMedia();
         setPreviewPopUp(!previewPopUp);
     }
@@ -250,7 +250,7 @@ const CreateBlogForm = () => {
             });
             // console.log(formData.getAll('images'));
             // make the fetch request
-            const url = "http://localhost:5000/events/create";
+            const url = "http://localhost:5000/blogs/create";
             const response = await axios({
                 method: 'POST',
                 url: url,
@@ -310,7 +310,7 @@ const CreateBlogForm = () => {
                         Create Blog
                     </h1>
                 </div>
-                <form onSubmit={onSubmit} className="grid grid-cols-6 w-full h-full px-8 py-12 space-x-4">
+                <form className="grid grid-cols-6 w-full h-full px-8 py-12 space-x-4">
                     {/* first column */}
                     <div className="col-span-3 w-full space-y-8">
                         <InputField
@@ -338,6 +338,8 @@ const CreateBlogForm = () => {
                             className="w-full"
                             name="blogCategory"
                             label="Blog Category"
+                            onChange={handleInputChange}
+                            value={values.blogCategory}
                             options={getBlogCategories()}
                         />
 

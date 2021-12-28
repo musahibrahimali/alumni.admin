@@ -16,25 +16,25 @@ const Admin = (props) => {
     const theme = useSelector((state) => state.theme.theme);
 
     /* material ui theme */
-    const appTheme = createTheme({
-        palette: {
-            mode: theme ? "dark" : "light", // toggle light and dark theme
-            ...(!theme
-                ? {
-                    // palette values for light mode
+    // const appTheme = createTheme({
+    //     palette: {
+    //         mode: theme ? "dark" : "light", // toggle light and dark theme
+    //         ...(!theme
+    //             ? {
+    //                 // palette values for light mode
 
-                }
-                : {
-                    // palette values for dark mode
-                    c_dark: {
-                        main: '#0A1929',
-                    },
-                    custom_paper: {
-                        main: '#121212',
-                    }
-                }),
-        },
-    });
+    //             }
+    //             : {
+    //                 // palette values for dark mode
+    //                 c_dark: {
+    //                     main: '#0A1929',
+    //                 },
+    //                 custom_paper: {
+    //                     main: '#121212',
+    //                 }
+    //             }),
+    //     },
+    // });
 
     // on component mount (when it is rendered in the browser)
     useEffect(() => {
@@ -62,23 +62,21 @@ const Admin = (props) => {
     return (
         <>
             <QueryClientProvider client={queryClient}>
-                <ThemeProvider theme={appTheme}>
-                    <div className={theme ? "dark" : ""}>
-                        {/* header */}
-                        <AdminNavbar />
-                        <div className="flex">
-                            {/* sticky sidebar */}
-                            <div className="w-[300px] max-w-[600px] sticky top-0 h-screen bg-blue-600">
-                                <Sidebar />
-                            </div>
-                            {/* individual pages */}
-                            <div className="w-full bg-white dark:bg-gray-900 h-full">
-                                {children}
-                            </div>
+                <div className={theme ? "dark" : ""}>
+                    {/* header */}
+                    <AdminNavbar />
+                    <div className="flex">
+                        {/* sticky sidebar */}
+                        <div className="w-[300px] max-w-[600px] sticky top-0 h-screen bg-blue-600">
+                            <Sidebar />
                         </div>
-                        <Footer />
+                        {/* individual pages */}
+                        <div className="w-full bg-white dark:bg-gray-900 h-full">
+                            {children}
+                        </div>
                     </div>
-                </ThemeProvider>
+                    <Footer />
+                </div>
                 {/* query dev tools */}
                 <ReactQueryDevtools initialIsOpen={false} />
             </QueryClientProvider>

@@ -1,43 +1,31 @@
-import { Avatar, IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import axios from 'axios';
+import PreviewMedia from './PreviewMedia';
+import { IconButton } from '@mui/material';
 import {
     CopyRight,
-    DatePicker,
     InputField,
     Notification,
     PopUp,
     UseForm,
 } from "../../../components";
-import PreviewMedia from './PreviewMedia';
-import GuestForm from './GuestForm';
-import { TimePicker } from '../../../widgets/widgets';
 
 const initialValues = {
-    eventTitle: "",
-    eventSnippet: "",
-    eventDescription: "",
-    eventLocation: "",
-    eventDate: new Date(),
-    eventTime: new Date(),
+    newsTitle: "",
+    newsSnippet: "",
+    newsDescription: "",
 }
 
-const CreateEventForm = () => {
+const CreateNewsForm = () => {
     const [previewPopUp, setPreviewPopUp] = useState(false);
-    // const [guestPopUp, setGuestPopUp] = useState(false);
     const [isImg, setIsImg] = useState(false); // this facilitates the image preview
     const [isVid, setIsVid] = useState(false); // this facilitates the video preview
     const [isMed, setIsMed] = useState(false); // no media available
     const [previewImages, setPreviewImages] = useState([]);
     const [previewVideos, setPreviewVideos] = useState([]);
-    // const [guests, setGuest] = useState([]); // add guest to event
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
-    // get user id from redux
-    const user = useSelector((state) => state.user.user);
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         maxFiles: 10, // max number of files
@@ -65,23 +53,14 @@ const CreateEventForm = () => {
     // validate the form 
     const validateForm = (fieldValues = values) => {
         let temp = { ...errors };
-        if ('eventTitle' in fieldValues) {
-            temp.eventTitle = fieldValues.eventTitle ? "" : "This Field is Required";
+        if ('newsTitle' in fieldValues) {
+            temp.newsTitle = fieldValues.newsTitle ? "" : "This Field is Required";
         }
-        if ('eventSnippet' in fieldValues) {
-            temp.eventSnippet = fieldValues.eventSnippet ? "" : "This Field is Required";
+        if ('newsSnippet' in fieldValues) {
+            temp.newsSnippet = fieldValues.newsSnippet ? "" : "This Field is Required";
         }
-        if ('eventDescription' in fieldValues) {
-            temp.eventDescription = fieldValues.eventDescription ? "" : "This Field is Required";
-        }
-        if ('eventDate' in fieldValues) {
-            temp.eventDate = fieldValues.eventDate ? "" : "This Field is Required";
-        }
-        if ('eventTime' in fieldValues) {
-            temp.eventTime = fieldValues.eventTime ? "" : "This Field is Required";
-        }
-        if ('eventLocation' in fieldValues) {
-            temp.eventLocation = fieldValues.eventLocation ? "" : "This Field is Required";
+        if ('newsDescription' in fieldValues) {
+            temp.newsDescription = fieldValues.newsDescription ? "" : "This Field is Required";
         }
         setErrors({
             ...temp
@@ -164,70 +143,63 @@ const CreateEventForm = () => {
         // console.log(formData.getAll('images'));
     }, []);
 
-    // const addGuest = (data) => {
-    //     setGuest(prevGuests => [...prevGuests, {
-    //         id: getRandomNumber(),
-    //         firstName: data.firstName,
-    //         lastName: data.lastName,
-    //         position: data.position,
-    //         profile: data.profile,
-    //     }]);
-    // }
-
     const onSubmit = async (event) => {
         event.preventDefault();
         // instance of formdata
         const formData = new FormData();
-        formData.append("eventTitle", values.eventTitle);
-        formData.append("eventSnippet", values.eventSnippet);
-        formData.append("eventDescription", values.eventDescription);
-        formData.append("eventDate", values.eventDate);
-        formData.append("eventTime", values.eventTime);
-        formData.append("eventVenue", values.eventLocation);
-        // formData.append("guests", JSON.stringify(guests));
-        acceptedFiles.forEach((file) => {
-            if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
-                formData.append('images', file, file.name);
-            } else if (file.type === "video/mp4" || file.type === "video/quicktime" || file.type === "video/x-msvideo" || file.type === "video/x-ms-wmv" || file.type === "video/x-flv" || file.type === "video/x-matroska" || file.type === "video/webm" || file.type === "video/ogg") {
-                formData.append('videos', file, file.name);
+        if (validateForm()) {
+            formData.append("newsTitle", values.newsTitle);
+            formData.append("newsSnippet", values.newsSnippet);
+            formData.append("newsDescription", values.newsDescription);
+            acceptedFiles.forEach((file) => {
+                if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
+                    formData.append('images', file, file.name);
+                } else if (file.type === "video/mp4" || file.type === "video/quicktime" || file.type === "video/x-msvideo" || file.type === "video/x-ms-wmv" || file.type === "video/x-flv" || file.type === "video/x-matroska" || file.type === "video/webm" || file.type === "video/ogg") {
+                    formData.append('videos', file, file.name);
+                } else {
+                    setNotify({
+                        isOpen: true,
+                        message: "Invalid file type",
+                        type: "error"
+                    });
+                }
+            });
+            // console.log(formData.getAll('images'));
+            // make the fetch request
+            const url = "http://localhost:5000/news/create";
+            const response = await axios({
+                method: 'POST',
+                url: url,
+                data: formData,
+                withCredentials: true,
+                headers: {
+                    'Content-Type': 'multipart/form-data',
+                }
+            });
+            if (response.status === 200) {
+                setNotify({
+                    isOpen: true,
+                    message: "Event created successfully",
+                    type: "success"
+                });
+                resetForm();
             } else {
                 setNotify({
                     isOpen: true,
-                    message: "Invalid file type",
-                    type: "error"
+                    message: "There was an error creating the event",
+                    type: "success"
                 });
             }
-        });
-        // console.log(formData.getAll('images'));
-        // make the fetch request
-        const url = "http://localhost:5000/events/create";
-        const response = await axios({
-            method: 'POST',
-            url: url,
-            data: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        });
-        if (response.status === 200) {
-            setNotify({
-                isOpen: true,
-                message: "Event created successfully",
-                type: "success"
-            });
-            resetForm();
         } else {
-            console.log(response);
             setNotify({
                 isOpen: true,
-                message: "There was an error creating the event",
+                message: "Please fill out all required fields",
                 type: "error"
             });
         }
     }
 
     const resetForm = () => {
-        // setGuest([]);
         setPreviewImages([]);
         setPreviewVideos([]);
         setValues(initialValues);
@@ -255,10 +227,6 @@ const CreateEventForm = () => {
         setPreviewPopUp(!previewPopUp);
     }
 
-    // const handleGuestPopUp = () => {
-    //     setGuestPopUp(!guestPopUp);
-    // }
-
     // update ui when image list changes with useEffect
     useEffect(() => {
         // check there are either images or videos
@@ -274,56 +242,31 @@ const CreateEventForm = () => {
             <div className="relative top-0 mt-8 origin-top bg-white dark:bg-gray-200 flex flex-col justify-center items-center w-full h-full px-4 shadow-lg rounded-lg">
                 <div className="absolute -top-10 rounded-md bg-error-bg px-8 text-white font-sans font-extrabold py-1">
                     <h1 className="text-6xl">
-                        Create Event
+                        Create News
                     </h1>
                 </div>
-                <form className="grid grid-cols-6 w-full h-full px-8 py-12 space-x-4">
+                <form className="grid grid-cols-6 w-full h-full px-8 py-16 space-x-4">
                     {/* first column */}
                     <div className="col-span-3 w-full space-y-8">
                         <InputField
                             className="w-full"
-                            name="eventTitle"
-                            value={values.eventTitle}
+                            name="newsTitle"
+                            value={values.newsTitle}
                             onChange={handleInputChange}
-                            placeholder="Event Title"
-                            error={errors.eventTitle}
+                            placeholder="News Title"
+                            error={errors.newsTitle}
                         />
-
-                        <div className="flex flex-row space-x-2 justify-between">
-                            <DatePicker
-                                className="w-full"
-                                name="eventDate"
-                                value={values.eventDate}
-                                onChange={handleInputChange}
-                                error={errors.eventDate}
-                            />
-                            <TimePicker
-                                className="w-full"
-                                name="eventTime"
-                                value={values.eventTime}
-                                onChange={handleInputChange}
-                                error={errors.eventTime}
-                            />
-                        </div>
 
                         <InputField
                             className="w-full"
-                            name="eventLocation"
-                            value={values.eventLocation}
-                            onChange={handleInputChange}
-                            placeholder="Event Venue"
-                            error={errors.eventLocation}
-                        />
-                        <InputField
-                            className="w-full"
-                            name="eventSnippet"
-                            value={values.eventSnippet}
+                            name="newsSnippet"
+                            value={values.newsSnippet}
                             onChange={handleInputChange}
                             multiline={true}
                             rows={3}
                             maxRows={10}
-                            placeholder="Short Description of Event"
-                            error={errors.eventSnippet}
+                            placeholder="Short Description of news"
+                            error={errors.newsSnippet}
                         />
                     </div>
 
@@ -331,14 +274,14 @@ const CreateEventForm = () => {
                     <div className="col-span-3 w-full space-y-6">
                         <InputField
                             className="w-full"
-                            name="eventDescription"
-                            value={values.eventDescription}
+                            name="newsDescription"
+                            value={values.newsDescription}
                             onChange={handleInputChange}
                             multiline={true}
                             rows={5}
                             maxRows={50}
-                            placeholder="Event Description"
-                            error={errors.eventDescription}
+                            placeholder="News Description"
+                            error={errors.newsDescription}
                         />
                         {/* image preview after drag and drop or select */}
                         <div className="bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col justify-center items-center cursor-pointer relative py-2 px-2">
@@ -376,28 +319,6 @@ const CreateEventForm = () => {
                                 </div>
                             }
                         </div>
-                        {/* <div className="flex flex-col space-y-2 px-4 justify-center">
-                            <h3 className="text-center text-lg text-gray-700 dark:text-gray-200">
-                                Guest &amp; Host
-                            </h3>
-                            <div className="flex flex-row space-x-2 justify-bwteen items-center">
-                                {
-                                    guests && guests.map((guest, index) => (
-                                        <div key={index}>
-                                            <Avatar
-                                                src={guest.profile}
-                                                fontSize="medium"
-                                            />
-                                        </div>
-                                    ))
-                                }
-                                <div onClick={handleGuestPopUp} className="bg-gray-300 mx-2 rounded-full">
-                                    <IconButton>
-                                        <AddCircleOutlineOutlinedIcon className="text-blue-600 dark:text-blue-400" fontSize='medium' />
-                                    </IconButton>
-                                </div>
-                            </div>
-                        </div> */}
                     </div>
                 </form>
                 <div className="flex flex-row justify-center items-center text-white dark:text-gray-200 space-x-4 pb-4">
@@ -428,18 +349,6 @@ const CreateEventForm = () => {
                 />
             </PopUp>
 
-            {/* pop up  to preview images */}
-            {/* <PopUp
-                openPopUp={guestPopUp}
-                setOpenPopUp={setGuestPopUp}
-                title={"Add Event Guest"}
-            >
-                <GuestForm
-                    addGuest={addGuest}
-                    setGuestPopUp={setGuestPopUp}
-                />
-            </PopUp> */}
-
             {/* for notifications */}
             <Notification
                 notify={notify}
@@ -449,5 +358,5 @@ const CreateEventForm = () => {
     );
 }
 
-export default CreateEventForm;
+export default CreateNewsForm;
 

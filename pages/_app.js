@@ -1,19 +1,17 @@
+import React from 'react';
 import PropTypes from 'prop-types';
-import CssBaseline from '@mui/material/CssBaseline';
-import { CacheProvider } from '@emotion/react';
 import { HeadTag } from '../config/config';
-import createEmotionCache from "../provider/createEmotionCache";
 import { Provider } from 'react-redux';
 import store from "../provider/store";
 import Router from 'next/router';
 import ReactDOM from 'react-dom';
 import { PageChange } from "../components/components";
-import App from 'next/app';
-import React from 'react';
+import CssBaseline from '@mui/material/CssBaseline';
+import { ThemeProvider } from '@mui/material/styles';
+import { CacheProvider } from '@emotion/react';
+import createEmotionCache from "../provider/createEmotionCache";
 import '../styles/globals.css';
-import 'tailwindcss/tailwind.css';
-
-
+import appTheme from '../provider/AppTheme';
 
 // Client-side cache, shared for the whole session of the user in the browser.
 const clientSideEmotionCache = createEmotionCache();
@@ -34,50 +32,37 @@ Router.events.on("routeChangeError", () => {
   document.body.classList.remove("body-page-transition");
 });
 
-class MyApp extends App {
-  componentDidMount() {
-    let comment = document.createComment(
-      `
-        =========================================================
-        * * Alumni DashBaord
-        =========================================================
+const MyApp = (props) => {
+  const { Component, pageProps, emotionCache = clientSideEmotionCache } = props;
+  const Layout = Component.layout || (({ children }) => <>{children}</>);
 
-        * Coded by Musah Ibrahim Ali
-
-        =========================================================
-        `
-    );
-    document.insertBefore(comment, document.documentElement);
-  }
-  static async getInitialProps({ Component, router, ctx }) {
-    let pageProps = {};
-
-    if (Component.getInitialProps) {
-      pageProps = await Component.getInitialProps(ctx);
-    }
-
-    return { pageProps };
-  }
-  render() {
-    const { Component, pageProps, emotionCache = clientSideEmotionCache } = this.props;
-
-    const Layout = Component.layout || (({ children }) => <>{children}</>);
-
-    return (
-      <React.Fragment>
-        <CacheProvider value={emotionCache}>
+  return (
+    <React.Fragment>
+      <CacheProvider value={emotionCache}>
+        <ThemeProvider theme={appTheme}>
           <HeadTag /> {/*handles seo*/}
           <Provider store={store}>
             {/* CssBaseline kickstart an elegant, consistent, and simple baseline to build upon. */}
-            <CssBaseline />
             <Layout>
+              <CssBaseline />
               <Component {...pageProps} />
             </Layout>
           </Provider>
-        </CacheProvider>
-      </React.Fragment>
-    );
+        </ThemeProvider>
+      </CacheProvider>
+    </React.Fragment>
+  );
+}
+
+// get initial props form alumni
+MyApp.getInitialProps = async ({ Component, router, ctx }) => {
+  let pageProps = {};
+
+  if (Component.getInitialProps) {
+    pageProps = await Component.getInitialProps(ctx);
   }
+
+  return { pageProps };
 }
 
 MyApp.propTypes = {

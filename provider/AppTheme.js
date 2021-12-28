@@ -1,6 +1,7 @@
-import {createTheme} from '@mui/material';
+import { createTheme } from '@mui/material/styles';
+import { red } from '@mui/material/colors';
 
-// Create a appTheme instance.
+// Create a theme instance.
 const appTheme = createTheme({
     palette: {
         primary: {
@@ -9,12 +10,9 @@ const appTheme = createTheme({
         secondary: {
             main: '#19857b',
         },
-        background: {
-            default: '#fff',
+        error: {
+            main: red.A400,
         },
-        c_dark: {
-            main: '#0A1929',
-        }
     },
 });
 

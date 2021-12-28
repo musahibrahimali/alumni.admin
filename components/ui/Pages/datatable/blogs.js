@@ -115,7 +115,7 @@ const AllBlogsTable = () => {
                 if (target.value === "") {
                     return items;
                 } else {
-                    return items.filter(item => item.title.toLowerCase().includes(target.value));
+                    return items.filter(item => item.fullName.toLowerCase().includes(target.value));
                 }
             }
         });
@@ -150,7 +150,7 @@ const AllBlogsTable = () => {
             title: "Are you sure you want to delete entry",
             subTitle: "Entry deleted cannot be restored. You cant undo this operation",
             // onConfirm: () => {handleDelete(id)}
-        })
+        });
     }
 
     // handle delete operation

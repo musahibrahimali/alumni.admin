@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import SideBarItem from './SideBarItem';
 import DashboardOutlinedIcon from '@mui/icons-material/DashboardOutlined';
 import SettingsOutlinedIcon from '@mui/icons-material/SettingsOutlined';
@@ -7,8 +7,37 @@ import AppRegistrationOutlinedIcon from '@mui/icons-material/AppRegistrationOutl
 import AccountCircleOutlinedIcon from '@mui/icons-material/AccountCircleOutlined';
 import TocOutlinedIcon from '@mui/icons-material/TocOutlined';
 import CreateNewFolderOutlinedIcon from '@mui/icons-material/CreateNewFolderOutlined';
+import LogoutIcon from '@mui/icons-material/Logout';
+import { useSelector, useDispatch } from 'react-redux';
+import { setUser } from '../../../provider/provider';
+import { Notification } from '../../components';
+import { useRouter } from 'next/router';
+import Cookies from 'js-cookie';
 
 const Sidebar = () => {
+    const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" }); // notification
+    const user = useSelector((state) => state.user.user);
+    const dispatch = useDispatch();
+    const router = useRouter();
+
+    const handleLogOut = async () => {
+        const url = 'http://localhost:5000/admin/logout';
+        const response = await fetch(url, {
+            method: 'GET',
+            credentials: 'include',
+            headers: {
+                'Content-Type': 'application/json'
+            }
+        });
+        if (response.status == 200) {
+            Cookies.remove("user");
+            dispatch(setUser(null));
+            setNotify({ isOpen: true, message: "Logout Successful", type: "success" });
+            router.replace("/admin/login");
+        } else {
+            setNotify({ isOpen: true, message: "Logout Failed", type: "error" });
+        }
+    }
 
     return (
         <>
@@ -77,8 +106,17 @@ const Sidebar = () => {
                             />
                         }
                     />
+                    {
+                        user &&
+                        <div onClick={handleLogOut} className="bg-transparent w-[250px] text-gray-50 border border-gray-100 dark:text-gray-200 font-sans font-bold tracking-widest text-lg md:text-xl py-2 px-8 rounded hover:bg-gray-100 hover:text-gray-700 dark:hover:bg-gray-100 dark:hover:text-gray-700 cursor-pointer">
+                            <LogoutIcon fontSize='medium' />
+                            <button className="mx-4 font-extrabold tracking-widest">
+                                Logout
+                            </button>
+                        </div>
+                    }
                 </ul>
-                <div className="flex py-56 justify-center items-center place-items-end">
+                <div className="flex py-44 justify-center items-center place-items-end">
                     <div className="bg-white px-8 py-2 text-gray-700  dark:bg-gray-900 shadow-md dark:text-gray-100">
                         <p className="text-sm">
                             copyright {new Date().getFullYear()} Alumni
@@ -86,6 +124,11 @@ const Sidebar = () => {
                     </div>
                 </div>
             </div>
+
+            <Notification
+                notify={notify}
+                setNotify={setNotify}
+            />
         </>
     );
 }
