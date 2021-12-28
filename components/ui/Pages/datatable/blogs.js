@@ -199,7 +199,7 @@ const AllBlogsTable = () => {
                                             <div className="flex flex-row justify-between items-center space-x-1">
                                                 {/* edit */}
                                                 <ActionButton
-                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-1 px-2 rounded"
+                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
                                                     onClick={() => {
                                                         handleUserClick(item);
                                                     }}>
@@ -207,7 +207,7 @@ const AllBlogsTable = () => {
                                                 </ActionButton>
                                                 {/* delete */}
                                                 <ActionButton
-                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-1 px-2 rounded"
+                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
                                                     onClick={
                                                         () => { onDelete(item) }
                                                     }>
