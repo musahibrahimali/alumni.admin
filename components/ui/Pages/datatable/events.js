@@ -169,7 +169,7 @@ const AllEventsTable = () => {
 
     return (
         <>
-            <div className="bg-white dark:bg-gray-900 shadow-xl rounded-lg">
+            <div className="bg-white dark:bg-gray-200 shadow-xl rounded-lg">
                 <div className="mx-4 px-4 pt-14">
                     <div className="flex">
                         <InputField

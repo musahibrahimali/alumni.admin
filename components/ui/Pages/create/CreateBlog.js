@@ -41,8 +41,8 @@ const getBlogCategories = () => ([
         title: 'Entertainment',
     },
     {
-        value: 'politics',
-        label: 'Politics',
+        id: 'politics',
+        title: 'Politics',
     },
     {
         id: 'travel',
@@ -335,7 +335,6 @@ const CreateBlogForm = () => {
                         />
 
                         <DropDown
-                            className="w-full"
                             name="blogCategory"
                             label="Blog Category"
                             onChange={handleInputChange}

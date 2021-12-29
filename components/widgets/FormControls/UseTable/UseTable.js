@@ -1,12 +1,11 @@
 import React, { useState } from 'react';
-import {
-    Table,
-    TableHead,
-    TableRow,
-    TableCell,
-    TablePagination,
-    TableSortLabel,
-} from '@mui/material';
+// import { Table, TableCell, TableHead, TablePagination, TableRow, TableSortLabel } from '@material-ui/core';
+import Table from '@mui/material/Table';
+import TableCell from '@mui/material/TableCell';
+import TableHead from '@mui/material/TableHead';
+import TablePagination from '@mui/material/TablePagination';
+import TableRow from '@mui/material/TableRow';
+import TableSortLabel from '@mui/material/TableSortLabel';
 import { UseTableStyles } from './UseTableStyles';
 
 const UseTable = (records, headCells, filterFn) => {
@@ -38,13 +37,12 @@ const UseTable = (records, headCells, filterFn) => {
         return (
             <TablePagination
                 component='div'
-                page={page}
-                rowsPerPageOptions={pages}
-                rowsPerPage={rowsPerPage}
                 count={records.length}
-                onChangePage={handlePageChange}
-                onChangeRowsPerPage={handleRowsPerPageChange}
+                rowsPerPage={rowsPerPage}
+                page={page}
                 onPageChange={handlePageChange}
+                onRowsPerPageChange={handleRowsPerPageChange}
+                rowsPerPageOptions={pages}
             />
         );
     }

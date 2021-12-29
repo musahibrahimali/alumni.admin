@@ -13,6 +13,7 @@ const Profile = () => {
             router.replace('/admin/login');
         }
     });
+
     return (
         <>
             <ProfilePage />
