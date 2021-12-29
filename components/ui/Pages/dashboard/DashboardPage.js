@@ -68,7 +68,7 @@ const DashboardPage = () => {
         setIsLoading(true);
         setInterval(() => {
             setIsLoading(false);
-        }, 5000);
+        }, 3000);
     }, []);
 
     return (
