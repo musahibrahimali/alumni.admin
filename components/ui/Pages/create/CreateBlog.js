@@ -14,6 +14,7 @@ import {
     PopUp,
     UseForm,
 } from "../../../components";
+import { createBlog } from '../../../utils/request_helpers';
 
 const getBlogCategories = () => ([
     {
@@ -74,8 +75,6 @@ const CreateBlogForm = () => {
     const [previewImages, setPreviewImages] = useState([]);
     const [previewVideos, setPreviewVideos] = useState([]);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
-    // get theme from redux with useSelector
-    const theme = useSelector((state) => state.theme.theme);
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         maxFiles: 10, // max number of files
@@ -251,16 +250,8 @@ const CreateBlogForm = () => {
             // console.log(formData.getAll('images'));
             // make the fetch request
             const url = "http://localhost:5000/blogs/create";
-            const response = await axios({
-                method: 'POST',
-                url: url,
-                data: formData,
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
-            if (response.status === 200) {
+            const response = await createBlog(formData);
+            if (response.data) {
                 setNotify({
                     isOpen: true,
                     message: "Event created successfully",

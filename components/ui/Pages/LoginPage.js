@@ -2,9 +2,7 @@ import React, { useState } from 'react';
 import { useRouter } from 'next/router';
 import Link from 'next/link';
 import { Notification } from '../../components';
-import { setUser } from '../../../provider/provider';
-import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const initialValues = {
     emailAddress: "",
@@ -15,10 +13,9 @@ const LoginPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [values, setValues] = useState(initialValues);
     const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState({}); // errors if any
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" }); // notification
     const router = useRouter();
-    const dispatch = useDispatch();
+
     // handle input change
     const handleChange = (event) => {
         event.preventDefault();
@@ -27,49 +24,37 @@ const LoginPage = () => {
     }
 
     // handle submit
-    const handleSubmit = async (event) => {
-        event.preventDefault();
-        setIsLoading(true);
-        const url = "http://localhost:5000/admin/login";
-        const data = {
-            emailAddress: values.emailAddress,
-            password: values.password
-        }
-        const response = await fetch(url, {
-            method: 'POST',
-            credentials: 'include',
+    const handleLogInRequest = async () => {
+        const username = values.emailAddress;
+        const password = values.password;
+        const response = await axios({
+            url: `http://localhost:5000/admin/login`,
+            method: "POST",
+            withCredentials: true,
             headers: {
-                'Content-Type': 'application/json'
+                "Accept": "application/json",
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
             },
-            body: JSON.stringify(data)
+            data: JSON.stringify({
+                username,
+                password,
+            }),
         });
-
-        const admin = await response.json();
-        if (response.status === 200) {
+        if (response.data.access_token) {
             setNotify({ isOpen: true, message: "Login Successful", type: "success" });
             setIsLoading(false);
-            dispatch(setUser(admin.admin));
-            Cookies.set("user", true);
-            router.replace("/admin/dashboard");
+            router.replace('/admin/dashboard');
         } else {
-            setNotify({ isOpen: true, message: "Invalid email or password", type: "error" });
+            setNotify({ isOpen: true, message: "There was an error loggin in", type: "success" });
             setIsLoading(false);
-            if (admin.errors) {
-                if (admin.errors.email) {
-                    setErrors({
-                        ...errors,
-                        emailAddress: admin.errors.email
-                    });
-                }
-
-                if (admin.errors.password) {
-                    setErrors({
-                        ...errors,
-                        password: admin.errors.password
-                    });
-                }
-            }
         }
+    }
+
+    const onSubmit = async (event) => {
+        event.preventDefault();
+        setIsLoading(true);
+        await handleLogInRequest();
     }
 
     // show or hide password
@@ -86,7 +71,7 @@ const LoginPage = () => {
                             Login
                         </h1>
                     </div>
-                    <form onSubmit={handleSubmit} className="bg-transparent w-full px-8">
+                    <form onSubmit={onSubmit} className="bg-transparent w-full px-8">
                         <div className="flex w-full items-center border-2 py-2 px-3 rounded-2xl mb-4">
                             <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5 text-gray-400" fill="none" viewBox="0 0 24 24" stroke="currentColor">
                                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M16 12a4 4 0 10-8 0 4 4 0 008 0zm0 0v1.5a2.5 2.5 0 005 0V12a9 9 0 10-9 9m4.5-1.206a8.959 8.959 0 01-4.5 1.207" />
@@ -132,7 +117,7 @@ const LoginPage = () => {
                         {
                             !isLoading ?
                                 <button
-                                    onClick={handleSubmit}
+                                    onClick={onSubmit}
                                     type="submit"
                                     className="block w-full bg-indigo-700 hover:bg-indigo-600 mt-4 py-2 rounded-2xl text-white font-semibold mb-2">
                                     Login

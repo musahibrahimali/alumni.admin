@@ -1,10 +1,9 @@
-import { Avatar, IconButton } from '@mui/material';
+import { IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
-import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
+// import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { useDropzone } from 'react-dropzone';
 import { useSelector } from 'react-redux';
-import axios from 'axios';
 import {
     CopyRight,
     DatePicker,
@@ -14,8 +13,9 @@ import {
     UseForm,
 } from "../../../components";
 import PreviewMedia from './PreviewMedia';
-import GuestForm from './GuestForm';
+// import GuestForm from './GuestForm';
 import { TimePicker } from '../../../widgets/widgets';
+import { createEvent } from '../../../utils/request_helpers';
 
 const initialValues = {
     eventTitle: "",
@@ -201,14 +201,7 @@ const CreateEventForm = () => {
         // console.log(formData.getAll('images'));
         // make the fetch request
         const url = "http://localhost:5000/events/create";
-        const response = await axios({
-            method: 'POST',
-            url: url,
-            data: formData,
-            headers: {
-                'Content-Type': 'multipart/form-data',
-            }
-        });
+        const response = await createEvent(formData);
         if (response.status === 200) {
             setNotify({
                 isOpen: true,
@@ -217,7 +210,6 @@ const CreateEventForm = () => {
             });
             resetForm();
         } else {
-            console.log(response);
             setNotify({
                 isOpen: true,
                 message: "There was an error creating the event",

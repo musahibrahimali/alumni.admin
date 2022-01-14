@@ -23,6 +23,7 @@ module.exports = {
       'static.xx.fbcdn.net',
       "cdn.dribbble.com",
       "images.unsplash.com",
+      "www.gravatar.com",
     ],
   },
   plugins: withPlugins([withVideos, {}]),

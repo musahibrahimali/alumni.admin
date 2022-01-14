@@ -1,4 +1,6 @@
 import React, { useState } from 'react';
+import { Notification } from '../../components';
+import { updateAdminProfile } from '../../utils/request_helpers';
 
 const initialValues = {
     firstName: "",
@@ -10,6 +12,7 @@ const initialValues = {
 
 const SettingsForm = () => {
     const [values, setValues] = useState(initialValues);
+    const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
 
     const onInputChange = (event) => {
         event.preventDefault();
@@ -17,8 +20,25 @@ const SettingsForm = () => {
         setValues({ ...values, [name]: value });
     }
 
-    const onSubmit = (event) => {
+    const saveData = async (data) => {
+        const response = await updateAdminProfile(data);
+        if (response.data) {
+            setNotify({ isOpen: true, message: "User data saved", type: "success" });
+        } else {
+            setNotify({ isOpen: true, message: "There was an error saving data", type: "error" });
+        }
+    }
+
+    const onSubmit = async (event) => {
         event.preventDefault();
+        const data = {
+            firstName: values.firstName,
+            lastName: values.lastName,
+            password: values.password,
+            phone: values.phoneNumber,
+        }
+        await saveData(data);
+
     }
 
     return (
@@ -106,6 +126,12 @@ const SettingsForm = () => {
                     </form>
                 </section>
             </div>
+
+            {/* Action Notification */}
+            <Notification
+                notify={notify}
+                setNotify={setNotify}
+            />
         </>
     );
 }

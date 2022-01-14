@@ -13,6 +13,7 @@ import {
     PopUp,
     UseForm,
 } from "../../../components";
+import { createJob } from '../../../utils/request_helpers';
 
 const initialValues = {
     jobTitle: "",
@@ -129,17 +130,8 @@ const CreateJobForm = () => {
                 }
             });
             // make api request with axios
-            const url = "http://localhost:5000/jobs/create";
-            const response = await axios({
-                method: "POST",
-                url: url,
-                data: formData,
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data'
-                }
-            });
-            if (response.status === 200) {
+            const response = await createJob(formData);
+            if (response.data) {
                 setNotify({
                     isOpen: true,
                     message: "Job Created Successfully",

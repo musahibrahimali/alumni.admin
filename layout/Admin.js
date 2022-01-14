@@ -1,7 +1,5 @@
 import React, { useEffect } from 'react';
-import { createTheme } from '@mui/material';
 import { AdminNavbar, Footer, Sidebar } from "../components/components";
-import { ThemeProvider } from '@mui/material/styles';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSelector } from "react-redux";
@@ -14,27 +12,6 @@ const Admin = (props) => {
     const { children } = props;
     /* data layer */
     const theme = useSelector((state) => state.theme.theme);
-
-    /* material ui theme */
-    // const appTheme = createTheme({
-    //     palette: {
-    //         mode: theme ? "dark" : "light", // toggle light and dark theme
-    //         ...(!theme
-    //             ? {
-    //                 // palette values for light mode
-
-    //             }
-    //             : {
-    //                 // palette values for dark mode
-    //                 c_dark: {
-    //                     main: '#0A1929',
-    //                 },
-    //                 custom_paper: {
-    //                     main: '#121212',
-    //                 }
-    //             }),
-    //     },
-    // });
 
     // on component mount (when it is rendered in the browser)
     useEffect(() => {
@@ -63,8 +40,6 @@ const Admin = (props) => {
         <>
             <QueryClientProvider client={queryClient}>
                 <div className={theme ? "dark" : ""}>
-                    {/* header */}
-                    <AdminNavbar />
                     <div className="flex">
                         {/* sticky sidebar */}
                         <div className="w-[300px] max-w-[600px] sticky top-0 h-screen bg-blue-600">

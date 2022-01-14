@@ -1,10 +1,8 @@
 import React, { useState } from 'react';
 import Link from 'next/link';
-import { setUser } from '../../../provider/provider';
 import { Notification } from '../../components';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
-import { useDispatch } from 'react-redux';
+import axios from 'axios';
 
 const initialValues = {
     firstName: "",
@@ -18,10 +16,8 @@ const RegisterPage = () => {
     const [isVisible, setIsVisible] = useState(false);
     const [values, setValues] = useState(initialValues);
     const [isLoading, setIsLoading] = useState(false);
-    const [errors, setErrors] = useState({}); // errors if any
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const router = useRouter();
-    const dispatch = useDispatch();
     // handle input change
     const handleChange = (event) => {
         event.preventDefault();
@@ -38,64 +34,37 @@ const RegisterPage = () => {
     const handleSubmit = async (event) => {
         event.preventDefault();
         setIsLoading(true);
-        const url = "http://localhost:5000/admin/signup";
-        const data = {
-            firstName: values.firstName,
-            lastName: values.lastName,
-            phoneNumber: values.phoneNumber,
-            emailAddress: values.emailAddress,
-            password: values.password,
-        }
-        const response = await fetch(url, {
-            method: 'POST',
-            credentials: 'include',
-            headers: {
-                'Content-Type': 'application/json',
-                'accept': '*/*',
-                'access-control-allow-origin': '*',
-            },
-            body: JSON.stringify(data),
-        });
-        const admin = await response.json();
-        if (response.status === 200) {
-            if (admin.admin) {
-                dispatch(setUser(admin.admin));
-                Cookies.set('user', true);
-                setIsLoading(false);
-                setValues(initialValues);
-                setNotify({ isOpen: true, message: "Successfully registered", type: "success" });
-                router.replace("/admin/dashboard");
-            }
-        } else {
-            setNotify({ isOpen: true, message: "Failed to register", type: "error" });
-            if (admin.errors) {
-                setIsLoading(false);
-                if (admin.errors.email) {
-                    setErrors({
-                        ...errors,
-                        emailAddress: admin.errors.email
-                    });
-                }
+        const username = values.emailAddress;
+        const password = values.password;
+        const firstName = values.firstName;
+        const lastName = values.lastName;
+        const phone = values.phoneNumber;
 
-                if (admin.errors.password) {
-                    setErrors({
-                        ...errors,
-                        password: admin.errors.password
-                    });
-                }
-                if (admin.errors.firstName) {
-                    setErrors({
-                        ...errors,
-                        firstName: admin.errors.firstName
-                    });
-                }
-                if (admin.errors.lastName) {
-                    setErrors({
-                        ...errors,
-                        lastName: admin.errors.lastName
-                    });
-                }
-            }
+        const response = await axios({
+            url: `http://localhost:5000/admin/create-admin`,
+            method: "POST",
+            withCredentials: true,
+            headers: {
+                "Accept": "application/json",
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+            data: JSON.stringify({
+                username,
+                password,
+                firstName,
+                lastName,
+                phone,
+            }),
+        });
+
+        if (response.data.access_token) {
+            setIsLoading(false);
+            setNotify({ isOpen: true, message: "Successfully registered", type: "success" });
+            router.replace("/admin/dashboard");
+        } else {
+            setIsLoading(false);
+            setNotify({ isOpen: true, message: "Failed to register", type: "error" });
         }
     }
 

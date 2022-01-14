@@ -17,6 +17,7 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useRouter } from "next/router";
+import JobForm from './forms/JobForm';
 
 const users = [
     {
@@ -230,12 +231,10 @@ const AllJobsTable = () => {
                     openPopUp={openPopUp}
                     setOpenPopUp={setOpenPopUp}
                     title={"Users Form"}>
-                    {/*<EmployeeForm*/}
-                    {/*    addOrEdit={addOrEdit}*/}
-                    {/*    recordForEdit={recordsForEdit}*/}
-                    {/*/>*/}
-                    <div>
-                    </div>
+                    <JobForm
+                        addOrEdit={addOrEdit}
+                        recordForEdit={recordsForEdit}
+                    />
                 </PopUp>
 
                 {/* Action Notification */}

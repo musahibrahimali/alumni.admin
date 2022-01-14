@@ -11,6 +11,7 @@ import {
     PopUp,
     UseForm,
 } from "../../../components";
+import { createNews } from '../../../utils/request_helpers';
 
 const initialValues = {
     newsTitle: "",
@@ -166,17 +167,8 @@ const CreateNewsForm = () => {
             });
             // console.log(formData.getAll('images'));
             // make the fetch request
-            const url = "http://localhost:5000/news/create";
-            const response = await axios({
-                method: 'POST',
-                url: url,
-                data: formData,
-                withCredentials: true,
-                headers: {
-                    'Content-Type': 'multipart/form-data',
-                }
-            });
-            if (response.status === 200) {
+            const response = await createNews(formData);
+            if (response.data) {
                 setNotify({
                     isOpen: true,
                     message: "Event created successfully",

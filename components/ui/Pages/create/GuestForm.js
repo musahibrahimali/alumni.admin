@@ -62,14 +62,6 @@ const GuestForm = (props) => {
         const files = event.target.files;
         const file = files[0];
         fileReader.onload = (event) => {
-            // check filesize is greater than 16mb
-            if (file.size > 16777216) {
-                setErrors({
-                    ...errors,
-                    profile: "Profile image must be less than 16mb"
-                });
-                return;
-            }
             setProfile(event.target.result);
         }
         fileReader.readAsDataURL(file);

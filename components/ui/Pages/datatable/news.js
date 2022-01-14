@@ -17,7 +17,8 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useRouter } from "next/router";
-import BlogForm from './forms/BlogForm';
+import JobForm from './forms/JobForm';
+import NewsForm from './forms/NewsForm';
 
 const users = [
     {
@@ -82,7 +83,7 @@ const users = [
     },
 ];
 
-const AllBlogsTable = () => {
+const AllNewsTable = () => {
     const router = useRouter();
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
@@ -116,7 +117,7 @@ const AllBlogsTable = () => {
                 if (target.value === "") {
                     return items;
                 } else {
-                    return items.filter(item => item.fullName.toLowerCase().includes(target.value));
+                    return items.filter(item => item.title.toLowerCase().includes(target.value));
                 }
             }
         });
@@ -129,7 +130,7 @@ const AllBlogsTable = () => {
     }
 
     // add or edit entry
-    const addOrEdit = (blog, handleResetForm) => {
+    const addOrEdit = (employee, handleResetForm) => {
         handleResetForm();
         setRecordsForEdit(null);
         setOpenPopUp(false);
@@ -142,8 +143,7 @@ const AllBlogsTable = () => {
     }
 
     const handleUserClick = (item) => {
-        // set the item to open in popup
-
+        router.push(`/admin/operators/${item.id}`).then(() => { });
     }
 
     const onDelete = (id) => {
@@ -152,7 +152,7 @@ const AllBlogsTable = () => {
             title: "Are you sure you want to delete entry",
             subTitle: "Entry deleted cannot be restored. You cant undo this operation",
             // onConfirm: () => {handleDelete(id)}
-        });
+        })
     }
 
     // handle delete operation
@@ -187,6 +187,7 @@ const AllBlogsTable = () => {
                             onChange={handleSearch}
                         />
                     </div>
+
                     <TableContainer>
                         <TableHeader />
                         <TableBody>
@@ -226,11 +227,12 @@ const AllBlogsTable = () => {
                 </div>
 
                 {/* pop up form */}
+
                 <PopUp
                     openPopUp={openPopUp}
                     setOpenPopUp={setOpenPopUp}
-                    title={"Blog Form"}>
-                    <BlogForm
+                    title={"Users Form"}>
+                    <NewsForm
                         addOrEdit={addOrEdit}
                         recordForEdit={recordsForEdit}
                     />
@@ -252,4 +254,4 @@ const AllBlogsTable = () => {
     )
 }
 
-export default AllBlogsTable;
+export default AllNewsTable;

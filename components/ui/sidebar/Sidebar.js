@@ -12,7 +12,6 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../../provider/provider';
 import { Notification } from '../../components';
 import { useRouter } from 'next/router';
-import Cookies from 'js-cookie';
 
 const Sidebar = () => {
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" }); // notification
@@ -20,23 +19,22 @@ const Sidebar = () => {
     const dispatch = useDispatch();
     const router = useRouter();
 
+    // handle log out
     const handleLogOut = async () => {
-        const url = 'http://localhost:5000/admin/logout';
-        const response = await fetch(url, {
-            method: 'GET',
-            credentials: 'include',
+        await axios({
+            url: "http://localhost:5000/admin/logout",
+            method: "GET",
+            withCredentials: true,
             headers: {
-                'Content-Type': 'application/json'
-            }
-        });
-        if (response.status == 200) {
-            Cookies.remove("user");
+                "Accept": "application/json",
+                'Content-Type': 'application/json',
+                'Access-Control-Allow-Origin': '*',
+            },
+        }).then(() => {
             dispatch(setUser(null));
-            setNotify({ isOpen: true, message: "Logout Successful", type: "success" });
-            router.replace("/admin/login");
-        } else {
-            setNotify({ isOpen: true, message: "Logout Failed", type: "error" });
-        }
+            setNotify({ isOpen: true, message: "log out successfull", type: "error" });
+            router.reload(window.location.pathname);
+        }).catch(error => console.log(error));
     }
 
     return (
