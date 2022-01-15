@@ -16,88 +16,35 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import { useRouter } from "next/router";
 import JobForm from './forms/JobForm';
-
-const users = [
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        fullName: "John Doe",
-        firstName: "John",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-];
+import { initialData } from './initialData';
+import { useQuery } from 'react-query';
+import { getJobs } from '../../../utils/request_helpers';
+import { useEffect } from 'react';
 
 const AllJobsTable = () => {
-    const router = useRouter();
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const [recordsForEdit, setRecordsForEdit] = useState(null);
-    const [records, setRecords] = useState(users);
+    const [records, setRecords] = useState(initialData);
     const [filterFn, setFilterFn] = useState({
         fn: items => { return items; }
     });
 
+    const { data, isLoading } = useQuery(
+        'jobs',
+        getJobs,
+        {
+            keepPreviousData: true,
+        }
+    );
+
     const headCells = [
-        { id: "fullName", label: "User Name" },
-        { id: "emailAddress", label: "User Email" },
-        { id: "role", label: "User Phone" },
-        { id: "department", label: "User Department" },
+        { id: "title", label: "Job Title" },
+        { id: "company", label: "Company" },
+        { id: "location", label: "Location" },
+        { id: "snippet", label: "Short Description" },
         { id: "actions", label: "Actions", disableSorting: true },
     ];
 
@@ -128,18 +75,6 @@ const AllJobsTable = () => {
         setRecordsForEdit(item);
     }
 
-    // add or edit entry
-    const addOrEdit = (employee, handleResetForm) => {
-        handleResetForm();
-        setRecordsForEdit(null);
-        setOpenPopUp(false);
-        setRecords(null);
-        setNotify({
-            isOpen: true,
-            message: "Submitted Successfully",
-            type: "success"
-        })
-    }
 
     const handleUserClick = (item) => {
         handleOpenPopUP(item);
@@ -168,6 +103,12 @@ const AllJobsTable = () => {
         })
     }
 
+    useEffect(() => {
+        if (data) {
+            setRecords(data.data);
+        }
+    }, [data]);
+
     return (
         <>
             <div className="bg-white dark:bg-gray-200 shadow-xl rounded-lg">
@@ -191,34 +132,39 @@ const AllJobsTable = () => {
                         <TableHeader />
                         <TableBody>
                             {
-                                RecordsAfterPagingAndSorting().map((item) => (
-                                    <TableRow key={item.emailAddress}>
-                                        <TableCell>{item.fullName}</TableCell>
-                                        <TableCell>{item.emailAddress}</TableCell>
-                                        <TableCell>{item.phoneNumber}</TableCell>
-                                        <TableCell>{item.department}</TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-row justify-between items-center space-x-1">
-                                                {/* edit */}
-                                                <ActionButton
-                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={() => {
-                                                        handleUserClick(item);
-                                                    }}>
-                                                    <RecentActorsIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                                {/* delete */}
-                                                <ActionButton
-                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={
-                                                        () => { onDelete(item) }
-                                                    }>
-                                                    <CloseIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                                RecordsAfterPagingAndSorting().map((item) => {
+                                    const { title, company, snippet, location, expireDate } = item;
+                                    // get the first 60 symbols of the snippet
+                                    const snippetText = snippet?.length > 60 ? snippet?.substring(0, 60) + "..." : snippet;
+                                    return (
+                                        <TableRow key={expireDate}>
+                                            <TableCell>{title}</TableCell>
+                                            <TableCell>{company}</TableCell>
+                                            <TableCell>{location}</TableCell>
+                                            <TableCell>{snippetText}</TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-row justify-between items-center space-x-1">
+                                                    {/* edit */}
+                                                    <ActionButton
+                                                        classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={() => {
+                                                            handleUserClick(item);
+                                                        }}>
+                                                        <RecentActorsIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                    {/* delete */}
+                                                    <ActionButton
+                                                        classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={
+                                                            () => { onDelete(item) }
+                                                        }>
+                                                        <CloseIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
                             }
                         </TableBody>
                     </TableContainer>
@@ -232,7 +178,6 @@ const AllJobsTable = () => {
                     setOpenPopUp={setOpenPopUp}
                     title={"Users Form"}>
                     <JobForm
-                        addOrEdit={addOrEdit}
                         recordForEdit={recordsForEdit}
                     />
                 </PopUp>

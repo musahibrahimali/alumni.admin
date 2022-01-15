@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ActionButton,
     ConfirmDialog,
@@ -18,69 +18,10 @@ import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useRouter } from "next/router";
 import NewsForm from './forms/NewsForm';
+import { initialData } from './initialData';
+import { useQuery } from 'react-query';
+import { getNews } from '../../../utils/request_helpers';
 
-const users = [
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        fullName: "John Doe",
-        firstName: "John",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-];
 
 const AllNewsTable = () => {
     const router = useRouter();
@@ -88,16 +29,22 @@ const AllNewsTable = () => {
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const [recordsForEdit, setRecordsForEdit] = useState(null);
-    const [records, setRecords] = useState(users);
+    const [records, setRecords] = useState(initialData);
     const [filterFn, setFilterFn] = useState({
         fn: items => { return items; }
     });
 
+    const { data } = useQuery(
+        'news',
+        getNews,
+        {
+            keepPreviousData: true,
+        }
+    );
+
     const headCells = [
-        { id: "fullName", label: "User Name" },
-        { id: "emailAddress", label: "User Email" },
-        { id: "role", label: "User Phone" },
-        { id: "department", label: "User Department" },
+        { id: "title", label: "News Title" },
+        { id: "snippet", label: "Short Description" },
         { id: "actions", label: "Actions", disableSorting: true },
     ];
 
@@ -128,19 +75,6 @@ const AllNewsTable = () => {
         setRecordsForEdit(item);
     }
 
-    // add or edit entry
-    const addOrEdit = (employee, handleResetForm) => {
-        handleResetForm();
-        setRecordsForEdit(null);
-        setOpenPopUp(false);
-        setRecords(null);
-        setNotify({
-            isOpen: true,
-            message: "Submitted Successfully",
-            type: "success"
-        })
-    }
-
     const handleUserClick = (item) => {
         handleOpenPopUP(item);
     }
@@ -168,6 +102,12 @@ const AllNewsTable = () => {
         })
     }
 
+    useEffect(() => {
+        if (data) {
+            setRecords(data.data);
+        }
+    }, [data]);
+
     return (
         <>
             <div className="bg-white dark:bg-gray-200 shadow-xl rounded-lg">
@@ -191,34 +131,37 @@ const AllNewsTable = () => {
                         <TableHeader />
                         <TableBody>
                             {
-                                RecordsAfterPagingAndSorting().map((item) => (
-                                    <TableRow key={item.emailAddress}>
-                                        <TableCell>{item.fullName}</TableCell>
-                                        <TableCell>{item.emailAddress}</TableCell>
-                                        <TableCell>{item.phoneNumber}</TableCell>
-                                        <TableCell>{item.department}</TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-row justify-between items-center space-x-1">
-                                                {/* edit */}
-                                                <ActionButton
-                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={() => {
-                                                        handleUserClick(item);
-                                                    }}>
-                                                    <RecentActorsIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                                {/* delete */}
-                                                <ActionButton
-                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={
-                                                        () => { onDelete(item) }
-                                                    }>
-                                                    <CloseIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                                RecordsAfterPagingAndSorting().map((item) => {
+                                    const { title, details, snippet } = item;
+                                    // get the first 60 symbols of the snippet
+                                    const snippetText = snippet?.length > 1000 ? snippet?.substring(0, 1000) + "..." : snippet;
+                                    return (
+                                        <TableRow key={item.createdAt}>
+                                            <TableCell>{title}</TableCell>
+                                            <TableCell>{snippetText}</TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-row justify-between items-center space-x-1">
+                                                    {/* edit */}
+                                                    <ActionButton
+                                                        classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={() => {
+                                                            handleUserClick(item);
+                                                        }}>
+                                                        <RecentActorsIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                    {/* delete */}
+                                                    <ActionButton
+                                                        classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={
+                                                            () => { onDelete(item) }
+                                                        }>
+                                                        <CloseIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
                             }
                         </TableBody>
                     </TableContainer>
@@ -232,7 +175,6 @@ const AllNewsTable = () => {
                     setOpenPopUp={setOpenPopUp}
                     title={"Users Form"}>
                     <NewsForm
-                        addOrEdit={addOrEdit}
                         recordForEdit={recordsForEdit}
                     />
                 </PopUp>

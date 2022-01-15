@@ -307,12 +307,15 @@ const BlogForm = (props) => {
 
         // pre populate the data
         if (blog) {
-            values.blogTitle = blog?.title;
-            values.blogSnippet = blog?.snippet;
-            values.blogDescription = blog?.details;
-            values.blogDate = blog?.date;
-            values.blogCategory = blog?.category;
-            // format date with moment
+            // set the values
+            setValues({
+                blogTitle: blog?.title,
+                blogSnippet: blog?.snippet,
+                blogDescription: blog?.details,
+                blogDate: blog?.date,
+                blogCategory: blog?.category,
+            });
+
             // if there are images
             if (blog?.images) {
                 blog?.images.map((image) => addPrevImage(image));
@@ -323,6 +326,7 @@ const BlogForm = (props) => {
                 blog?.videos.map((video) => addPrevVideo(video));
             }
         }
+        // eslint-disable-next-line react-hooks/exhaustive-deps
     }, []);
 
     return (

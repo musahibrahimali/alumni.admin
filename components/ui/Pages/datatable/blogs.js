@@ -19,76 +19,15 @@ import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import BlogForm from './forms/BlogForm';
 import { useQuery } from 'react-query';
 import { getBlogs } from '../../../utils/request_helpers';
-
-const users = [
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        fullName: "John Doe",
-        firstName: "John",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-];
+import moment from 'moment';
+import { initialData } from './initialData';
 
 const AllBlogsTable = () => {
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const [recordsForEdit, setRecordsForEdit] = useState(null);
-    const [records, setRecords] = useState(users);
+    const [records, setRecords] = useState(initialData);
     const [filterFn, setFilterFn] = useState({
         fn: items => { return items; }
     });
@@ -103,10 +42,10 @@ const AllBlogsTable = () => {
 
 
     const headCells = [
-        { id: "title", label: "Title" },
+        { id: "title", label: "Blog Title" },
         { id: "date", label: "Date" },
         { id: "category", label: "Category" },
-        { id: "snippet", label: "Snippet" },
+        { id: "snippet", label: "Short Description" },
         { id: "actions", label: "Actions", disableSorting: true },
     ];
 
@@ -125,7 +64,7 @@ const AllBlogsTable = () => {
                 if (target.value === "") {
                     return items;
                 } else {
-                    return items.filter(item => item.fullName.toLowerCase().includes(target.value));
+                    return items.filter(item => item.title.toLowerCase().includes(target.value));
                 }
             }
         });
@@ -193,34 +132,41 @@ const AllBlogsTable = () => {
                         <TableHeader />
                         <TableBody>
                             {
-                                RecordsAfterPagingAndSorting()?.map((item) => (
-                                    <TableRow key={item?.date}>
-                                        <TableCell>{item?.title}</TableCell>
-                                        <TableCell>{item?.date}</TableCell>
-                                        <TableCell>{item?.category}</TableCell>
-                                        <TableCell>{item?.snippet}</TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-row justify-between items-center space-x-1">
-                                                {/* edit */}
-                                                <ActionButton
-                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={() => {
-                                                        handleUserClick(item);
-                                                    }}>
-                                                    <RecentActorsIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                                {/* delete */}
-                                                <ActionButton
-                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={
-                                                        () => { onDelete(item) }
-                                                    }>
-                                                    <CloseIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                                RecordsAfterPagingAndSorting()?.map((item) => {
+                                    const { title, date, category, snippet } = item;
+                                    // format date with moment js
+                                    const dateFormatted = moment(date).format("DD/MM/YY");
+                                    // get the first 60 words of the snippet
+                                    const snippetText = snippet?.length > 60 ? snippet?.substring(0, 60) + "..." : snippet;
+                                    return (
+                                        <TableRow key={date}>
+                                            <TableCell>{title}</TableCell>
+                                            <TableCell>{dateFormatted}</TableCell>
+                                            <TableCell>{category}</TableCell>
+                                            <TableCell>{snippetText}</TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-row justify-between items-center space-x-1">
+                                                    {/* edit */}
+                                                    <ActionButton
+                                                        classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={() => {
+                                                            handleUserClick(item);
+                                                        }}>
+                                                        <RecentActorsIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                    {/* delete */}
+                                                    <ActionButton
+                                                        classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={
+                                                            () => { onDelete(item) }
+                                                        }>
+                                                        <CloseIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    )
+                                })
                             }
                         </TableBody>
                     </TableContainer>

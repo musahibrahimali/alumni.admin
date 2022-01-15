@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ActionButton,
     ConfirmDialog,
@@ -16,88 +16,36 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import { useRouter } from "next/router";
 import EventForm from './forms/EventForm';
-
-const users = [
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        fullName: "John Doe",
-        firstName: "John",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        fullName: "John Doe",
-        lastName: "Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-    {
-        id: 1,
-        emailAddress: "johndoe@email.com",
-        firstName: "John",
-        lastName: "Doe",
-        fullName: "John Doe",
-        role: "Admin",
-        department: "Technology",
-        phoneNumber: "1234567890",
-    },
-];
+import { initialData } from './initialData';
+import { getEvents } from '../../../utils/request_helpers';
+import { useQuery } from 'react-query';
+import moment from 'moment';
 
 const AllEventsTable = () => {
-    const router = useRouter();
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
     const [recordsForEdit, setRecordsForEdit] = useState(null);
-    const [records, setRecords] = useState(users);
+    const [records, setRecords] = useState(initialData);
     const [filterFn, setFilterFn] = useState({
         fn: items => { return items; }
     });
 
+    const { data, isLoading } = useQuery(
+        'events',
+        getEvents,
+        {
+            keepPreviousData: true,
+        }
+    );
+
     const headCells = [
-        { id: "fullName", label: "User Name" },
-        { id: "emailAddress", label: "User Email" },
-        { id: "role", label: "User Phone" },
-        { id: "department", label: "User Department" },
+        { id: "title", label: "Event Title" },
+        { id: "venue", label: "Venue" },
+        { id: "startDate", label: "Starting Date" },
+        { id: "endDate", label: "Ending Date" },
+        { id: "snippet", label: "Short Description" },
         { id: "actions", label: "Actions", disableSorting: true },
     ];
 
@@ -155,6 +103,12 @@ const AllEventsTable = () => {
         })
     }
 
+    useEffect(() => {
+        if (data) {
+            setRecords(data.data);
+        }
+    }, [data]);
+
     return (
         <>
             <div className="bg-white dark:bg-gray-200 shadow-xl rounded-lg">
@@ -178,34 +132,43 @@ const AllEventsTable = () => {
                         <TableHeader />
                         <TableBody>
                             {
-                                RecordsAfterPagingAndSorting().map((item) => (
-                                    <TableRow key={item.emailAddress}>
-                                        <TableCell>{item.fullName}</TableCell>
-                                        <TableCell>{item.emailAddress}</TableCell>
-                                        <TableCell>{item.phoneNumber}</TableCell>
-                                        <TableCell>{item.department}</TableCell>
-                                        <TableCell>
-                                            <div className="flex flex-row justify-between items-center space-x-1">
-                                                {/* edit */}
-                                                <ActionButton
-                                                    classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={() => {
-                                                        handleUserClick(item);
-                                                    }}>
-                                                    <RecentActorsIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                                {/* delete */}
-                                                <ActionButton
-                                                    classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
-                                                    onClick={
-                                                        () => { onDelete(item) }
-                                                    }>
-                                                    <CloseIcon className="text-white" fontSize="small" />
-                                                </ActionButton>
-                                            </div>
-                                        </TableCell>
-                                    </TableRow>
-                                ))
+                                RecordsAfterPagingAndSorting().map((item) => {
+                                    const { title, startDate, endDate, snippet, venue } = item;
+                                    // get the first 60 symbols of the snippet
+                                    const snippetText = snippet?.length > 40 ? snippet?.substring(0, 40) + "..." : snippet;
+                                    // convert the start date using moment js
+                                    const startDateFormatted = moment(startDate).format("DD/MM/YY");
+                                    const endDateFormatted = moment(endDate).format("DD/MM/YY");
+                                    return (
+                                        <TableRow key={startDateFormatted}>
+                                            <TableCell>{title}</TableCell>
+                                            <TableCell>{venue}</TableCell>
+                                            <TableCell>{startDateFormatted}</TableCell>
+                                            <TableCell>{endDateFormatted}</TableCell>
+                                            <TableCell>{snippetText}</TableCell>
+                                            <TableCell>
+                                                <div className="flex flex-row justify-between items-center space-x-1">
+                                                    {/* edit */}
+                                                    <ActionButton
+                                                        classes="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={() => {
+                                                            handleUserClick(item);
+                                                        }}>
+                                                        <RecentActorsIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                    {/* delete */}
+                                                    <ActionButton
+                                                        classes="bg-red-500 hover:bg-red-700 text-white font-bold py-2 px-2 rounded"
+                                                        onClick={
+                                                            () => { onDelete(item) }
+                                                        }>
+                                                        <CloseIcon className="text-white" fontSize="small" />
+                                                    </ActionButton>
+                                                </div>
+                                            </TableCell>
+                                        </TableRow>
+                                    );
+                                })
                             }
                         </TableBody>
                     </TableContainer>

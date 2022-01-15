@@ -3,6 +3,7 @@ import TableItem from './TableItem';
 import AllEventsTable from './events';
 import AllJobsTable from './jobs';
 import AllBlogsTable from './blogs';
+import AllNewsTable from './news';
 
 const DataTablePage = () => {
     return (
@@ -21,6 +22,12 @@ const DataTablePage = () => {
             <TableItem
                 title="All Jobs"
                 table={<AllJobsTable />}
+            />
+
+            {/* all news */}
+            <TableItem
+                title="All News"
+                table={<AllNewsTable />}
             />
         </div>
     );
