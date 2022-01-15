@@ -17,7 +17,6 @@ import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
 import { useRouter } from "next/router";
-import JobForm from './forms/JobForm';
 import NewsForm from './forms/NewsForm';
 
 const users = [
@@ -124,9 +123,9 @@ const AllNewsTable = () => {
     }
 
     // close pop up
-    const handleOpenPopUP = () => {
+    const handleOpenPopUP = (item) => {
         setOpenPopUp(!openPopUp);
-        setRecordsForEdit(null);
+        setRecordsForEdit(item);
     }
 
     // add or edit entry
@@ -143,7 +142,7 @@ const AllNewsTable = () => {
     }
 
     const handleUserClick = (item) => {
-        router.push(`/admin/operators/${item.id}`).then(() => { });
+        handleOpenPopUP(item);
     }
 
     const onDelete = (id) => {

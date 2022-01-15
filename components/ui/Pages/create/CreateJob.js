@@ -30,24 +30,8 @@ const CreateJobForm = () => {
     const [isImg, setIsImg] = useState(false); // this facilitates the image preview
     const [isMed, setIsMed] = useState(false); // no media available
     const [previewImages, setPreviewImages] = useState([]);
-    const [logo, setLogo] = useState(null);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
 
-    const onLogoChange = (event) => {
-        event.preventDefault();
-        const fileReader = new FileReader();
-        const files = event.target.files;
-        const file = files[0];
-        fileReader.onload = (event) => {
-            // check if file size is greater than 16mb
-            if (file.size > 16777216) {
-                setNotify({ isOpen: true, message: "File size is too large", type: "error" });
-                return;
-            }
-            setLogo(event.target.result);
-        }
-        fileReader.readAsDataURL(file);
-    }
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         maxFiles: 10, // max number of files
@@ -110,14 +94,13 @@ const CreateJobForm = () => {
         if (validateForm()) {
             // instance of formdata
             const formData = new FormData();
-            formData.append('jobTitle', values.jobTitle);
-            formData.append('jobSnippet', values.jobSnippet);
-            formData.append('jobDescription', values.jobDescription);
-            formData.append('jobLocation', values.jobLocation);
+            formData.append('title', values.jobTitle);
+            formData.append('details', values.jobDescription);
+            formData.append('snippet', values.jobSnippet);
+            formData.append('location', values.jobLocation);
             formData.append('expireDate', values.expireDate);
-            formData.append('companyUrl', values.companyUrl);
-            formData.append('companyName', values.companyName);
-            formData.append('companyLogo', logo);
+            formData.append('url', values.companyUrl);
+            formData.append('company', values.companyName);
             acceptedFiles.forEach((file) => {
                 if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
                     formData.append('images', file, file.name);
@@ -129,6 +112,7 @@ const CreateJobForm = () => {
                     });
                 }
             });
+            // console.log(formData.getAll('images'));
             // make api request with axios
             const response = await createJob(formData);
             if (response.data) {
@@ -172,7 +156,6 @@ const CreateJobForm = () => {
     const removeContentToPost = () => {
         setPreviewImages([]);
         setValues(initialValues);
-        setLogo(null);
     }
 
     // remove media to post
@@ -311,13 +294,15 @@ const CreateJobForm = () => {
                             error={errors.jobDescription}
                         />
 
-                        <DatePicker
-                            className="w-full"
-                            name="expireDate"
-                            placeholder="Expire Date"
-                            onChange={handleInputChange}
-                            error={errors.expireDate}
-                        />
+                        <div className="w-full">
+                            <DatePicker
+                                name="expireDate"
+                                placeholder="Expire Date"
+                                onChange={handleInputChange}
+                                error={errors.expireDate}
+                                label={"Expiration Date"}
+                            />
+                        </div>
 
                         {/* image preview after drag and drop or select */}
                         <div className="bg-gray-50 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col justify-center items-center cursor-pointer relative py-2 px-2">
@@ -354,33 +339,6 @@ const CreateJobForm = () => {
                                     </button>
                                 </div>
                             }
-                        </div>
-                        <div className="flex flex-col space-y-2 px-4 justify-center items-center text-gray-700 dark:text-gray-200">
-                            <h3 className="text-center text-lg">
-                                Company Logo
-                            </h3>
-                            <div className="flex flex-row justify-center items-center">
-                                {
-                                    logo && <Image
-                                        className="w-full h-full rounded-full border border-gray-200 dark:border-gray-700"
-                                        src={logo}
-                                        height={80}
-                                        width={80}
-                                        objectFit='cover'
-                                        alt="company logo"
-                                    />
-                                }
-                                {
-                                    !logo && <InputField
-                                        className="w-full"
-                                        name="companyLogo"
-                                        placeholder="Company Logo"
-                                        type="file"
-                                        accept="image/*"
-                                        onChange={onLogoChange}
-                                    />
-                                }
-                            </div>
                         </div>
                     </div>
                 </form>

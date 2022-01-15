@@ -123,9 +123,9 @@ const AllJobsTable = () => {
     }
 
     // close pop up
-    const handleOpenPopUP = () => {
+    const handleOpenPopUP = (item) => {
         setOpenPopUp(!openPopUp);
-        setRecordsForEdit(null);
+        setRecordsForEdit(item);
     }
 
     // add or edit entry
@@ -142,7 +142,7 @@ const AllJobsTable = () => {
     }
 
     const handleUserClick = (item) => {
-        router.push(`/admin/operators/${item.id}`).then(() => { });
+        handleOpenPopUP(item);
     }
 
     const onDelete = (id) => {

@@ -1,10 +1,8 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import PreviewMedia from './PreviewMedia';
-import axios from 'axios';
 import { IconButton } from '@mui/material';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import {
     CopyRight,
     DatePicker,
@@ -228,11 +226,11 @@ const CreateBlogForm = () => {
             // instance of formdata
             const formData = new FormData();
             // add form data
-            formData.append("blogTitle", values.blogTitle);
-            formData.append("blogSnippet", values.blogSnippet);
-            formData.append("blogDescription", values.blogDescription);
-            formData.append("blogDate", values.blogDate);
-            formData.append("blogCategory", values.blogCategory);
+            formData.append("title", values.blogTitle);
+            formData.append("snippet", values.blogSnippet);
+            formData.append("details", values.blogDescription);
+            formData.append("date", values.blogDate);
+            formData.append("category", values.blogCategory);
             // add images
             acceptedFiles.forEach((file) => {
                 if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
@@ -249,19 +247,18 @@ const CreateBlogForm = () => {
             });
             // console.log(formData.getAll('images'));
             // make the fetch request
-            const url = "http://localhost:5000/blogs/create";
             const response = await createBlog(formData);
             if (response.data) {
                 setNotify({
                     isOpen: true,
-                    message: "Event created successfully",
+                    message: "Blog created successfully",
                     type: "success"
                 });
                 resetForm();
             } else {
                 setNotify({
                     isOpen: true,
-                    message: "There was an error creating the event",
+                    message: "There was an error creating the blog",
                     type: "success"
                 });
             }

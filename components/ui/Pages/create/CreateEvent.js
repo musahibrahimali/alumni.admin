@@ -1,9 +1,8 @@
-import { IconButton } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
+import { IconButton } from '@mui/material';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
 // import AddCircleOutlineOutlinedIcon from '@mui/icons-material/AddCircleOutlineOutlined';
 import { useDropzone } from 'react-dropzone';
-import { useSelector } from 'react-redux';
 import {
     CopyRight,
     DatePicker,
@@ -18,12 +17,13 @@ import { TimePicker } from '../../../widgets/widgets';
 import { createEvent } from '../../../utils/request_helpers';
 
 const initialValues = {
-    eventTitle: "",
-    eventSnippet: "",
-    eventDescription: "",
-    eventLocation: "",
-    eventDate: new Date(),
-    eventTime: new Date(),
+    title: "",
+    snippet: "",
+    details: "",
+    venue: "",
+    startDate: new Date(),
+    endDate: new Date(),
+    time: new Date(),
 }
 
 const CreateEventForm = () => {
@@ -36,8 +36,6 @@ const CreateEventForm = () => {
     const [previewVideos, setPreviewVideos] = useState([]);
     // const [guests, setGuest] = useState([]); // add guest to event
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
-    // get user id from redux
-    const user = useSelector((state) => state.user.user);
 
     const { acceptedFiles, getRootProps, getInputProps } = useDropzone({
         maxFiles: 10, // max number of files
@@ -65,23 +63,26 @@ const CreateEventForm = () => {
     // validate the form 
     const validateForm = (fieldValues = values) => {
         let temp = { ...errors };
-        if ('eventTitle' in fieldValues) {
-            temp.eventTitle = fieldValues.eventTitle ? "" : "This Field is Required";
+        if ('title' in fieldValues) {
+            temp.title = fieldValues.title ? "" : "This Field is Required";
         }
-        if ('eventSnippet' in fieldValues) {
-            temp.eventSnippet = fieldValues.eventSnippet ? "" : "This Field is Required";
+        if ('snippet' in fieldValues) {
+            temp.snippet = fieldValues.snippet ? "" : "This Field is Required";
         }
-        if ('eventDescription' in fieldValues) {
-            temp.eventDescription = fieldValues.eventDescription ? "" : "This Field is Required";
+        if ('details' in fieldValues) {
+            temp.details = fieldValues.details ? "" : "This Field is Required";
         }
-        if ('eventDate' in fieldValues) {
-            temp.eventDate = fieldValues.eventDate ? "" : "This Field is Required";
+        if ('startDate' in fieldValues) {
+            temp.startDate = fieldValues.startDate ? "" : "This Field is Required";
         }
-        if ('eventTime' in fieldValues) {
-            temp.eventTime = fieldValues.eventTime ? "" : "This Field is Required";
+        if ('endDate' in fieldValues) {
+            temp.endDate = fieldValues.endDate ? "" : "This Field is Required";
         }
-        if ('eventLocation' in fieldValues) {
-            temp.eventLocation = fieldValues.eventLocation ? "" : "This Field is Required";
+        if ('time' in fieldValues) {
+            temp.time = fieldValues.time ? "" : "This Field is Required";
+        }
+        if ('venue' in fieldValues) {
+            temp.venue = fieldValues.venue ? "" : "This Field is Required";
         }
         setErrors({
             ...temp
@@ -178,12 +179,13 @@ const CreateEventForm = () => {
         event.preventDefault();
         // instance of formdata
         const formData = new FormData();
-        formData.append("eventTitle", values.eventTitle);
-        formData.append("eventSnippet", values.eventSnippet);
-        formData.append("eventDescription", values.eventDescription);
-        formData.append("eventDate", values.eventDate);
-        formData.append("eventTime", values.eventTime);
-        formData.append("eventVenue", values.eventLocation);
+        formData.append("title", values.title);
+        formData.append("snippet", values.snippet);
+        formData.append("details", values.details);
+        formData.append("startDate", values.startDate);
+        formData.append("endDate", values.endDate);
+        formData.append("time", values.time);
+        formData.append("venue", values.venue);
         // formData.append("guests", JSON.stringify(guests));
         acceptedFiles.forEach((file) => {
             if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
@@ -200,9 +202,8 @@ const CreateEventForm = () => {
         });
         // console.log(formData.getAll('images'));
         // make the fetch request
-        const url = "http://localhost:5000/events/create";
         const response = await createEvent(formData);
-        if (response.status === 200) {
+        if (response.data) {
             setNotify({
                 isOpen: true,
                 message: "Event created successfully",
@@ -274,48 +275,58 @@ const CreateEventForm = () => {
                     <div className="col-span-3 w-full space-y-8">
                         <InputField
                             className="w-full"
-                            name="eventTitle"
-                            value={values.eventTitle}
+                            name="title"
+                            value={values.title}
                             onChange={handleInputChange}
                             placeholder="Event Title"
-                            error={errors.eventTitle}
+                            error={errors.title}
                         />
 
                         <div className="flex flex-row space-x-2 justify-between">
                             <DatePicker
                                 className="w-full"
-                                name="eventDate"
-                                value={values.eventDate}
+                                name="startDate"
+                                value={values.startDate}
                                 onChange={handleInputChange}
-                                error={errors.eventDate}
+                                error={errors.startDate}
+                                label={"Start Date"}
+                            />
+                            <DatePicker
+                                className="w-full"
+                                name="endDate"
+                                value={values.endDate}
+                                onChange={handleInputChange}
+                                error={errors.endDate}
+                                label={"End Date"}
                             />
                             <TimePicker
                                 className="w-full"
-                                name="eventTime"
-                                value={values.eventTime}
+                                name="time"
+                                value={values.time}
                                 onChange={handleInputChange}
-                                error={errors.eventTime}
+                                error={errors.time}
+                                label={"time"}
                             />
                         </div>
 
                         <InputField
                             className="w-full"
-                            name="eventLocation"
-                            value={values.eventLocation}
+                            name="venue"
+                            value={values.venue}
                             onChange={handleInputChange}
                             placeholder="Event Venue"
-                            error={errors.eventLocation}
+                            error={errors.venue}
                         />
                         <InputField
                             className="w-full"
-                            name="eventSnippet"
-                            value={values.eventSnippet}
+                            name="snippet"
+                            value={values.snippet}
                             onChange={handleInputChange}
                             multiline={true}
                             rows={3}
                             maxRows={10}
                             placeholder="Short Description of Event"
-                            error={errors.eventSnippet}
+                            error={errors.snippet}
                         />
                     </div>
 
@@ -323,14 +334,14 @@ const CreateEventForm = () => {
                     <div className="col-span-3 w-full space-y-6">
                         <InputField
                             className="w-full"
-                            name="eventDescription"
-                            value={values.eventDescription}
+                            name="details"
+                            value={values.details}
                             onChange={handleInputChange}
                             multiline={true}
                             rows={5}
                             maxRows={50}
                             placeholder="Event Description"
-                            error={errors.eventDescription}
+                            error={errors.details}
                         />
                         {/* image preview after drag and drop or select */}
                         <div className="bg-gray-50 dark:bg-gray-900 hover:bg-gray-100 border border-gray-200 dark:border-gray-700 rounded-md flex flex-col justify-center items-center cursor-pointer relative py-2 px-2">

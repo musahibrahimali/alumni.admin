@@ -28,7 +28,7 @@ const ProfilePage = () => {
             values.emailAddress = user?.username;
             values.phoneNumber = user?.phone;
         }
-    })
+    }, [user, values]);
 
     return (
         <>

@@ -123,26 +123,13 @@ const AllEventsTable = () => {
     }
 
     // close pop up
-    const handleOpenPopUP = () => {
+    const handleOpenPopUP = (item) => {
         setOpenPopUp(!openPopUp);
-        setRecordsForEdit(null);
-    }
-
-    // add or edit entry
-    const addOrEdit = (employee, handleResetForm) => {
-        handleResetForm();
-        setRecordsForEdit(null);
-        setOpenPopUp(false);
-        setRecords(null);
-        setNotify({
-            isOpen: true,
-            message: "Submitted Successfully",
-            type: "success"
-        })
+        setRecordsForEdit(item);
     }
 
     const handleUserClick = (item) => {
-        router.push(`/admin/operators/${item.id}`).then(() => { });
+        handleOpenPopUP(item);
     }
 
     const onDelete = (id) => {
@@ -232,7 +219,6 @@ const AllEventsTable = () => {
                     setOpenPopUp={setOpenPopUp}
                     title={"Users Form"}>
                     <EventForm
-                        addOrEdit={addOrEdit}
                         recordForEdit={recordsForEdit}
                     />
                 </PopUp>

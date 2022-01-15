@@ -13,4 +13,9 @@ export {
     deleteNews,
     updateAdminProfile,
     fetchUserProfile,
+    updateBlog,
+    updateAdminProfilePicture,
+    updateEvent,
+    updateJob,
+    updateNews,
 } from './request_helpers';

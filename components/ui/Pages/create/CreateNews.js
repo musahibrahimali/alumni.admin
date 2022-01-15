@@ -1,7 +1,6 @@
 import React, { useCallback, useEffect, useState } from 'react';
 import AddToPhotosOutlinedIcon from '@mui/icons-material/AddToPhotosOutlined';
 import { useDropzone } from 'react-dropzone';
-import axios from 'axios';
 import PreviewMedia from './PreviewMedia';
 import { IconButton } from '@mui/material';
 import {
@@ -149,9 +148,9 @@ const CreateNewsForm = () => {
         // instance of formdata
         const formData = new FormData();
         if (validateForm()) {
-            formData.append("newsTitle", values.newsTitle);
-            formData.append("newsSnippet", values.newsSnippet);
-            formData.append("newsDescription", values.newsDescription);
+            formData.append("title", values.newsTitle);
+            formData.append("snippet", values.newsSnippet);
+            formData.append("details", values.newsDescription);
             acceptedFiles.forEach((file) => {
                 if (file.type === "image/jpeg" || file.type === "image/jpg" || file.type === "image/png" || file.type === "image/gif" || file.type === "image/bmp" || file.type === "image/svg+xml") {
                     formData.append('images', file, file.name);
@@ -171,14 +170,14 @@ const CreateNewsForm = () => {
             if (response.data) {
                 setNotify({
                     isOpen: true,
-                    message: "Event created successfully",
+                    message: "News created successfully",
                     type: "success"
                 });
                 resetForm();
             } else {
                 setNotify({
                     isOpen: true,
-                    message: "There was an error creating the event",
+                    message: "There was an error creating the news",
                     type: "success"
                 });
             }

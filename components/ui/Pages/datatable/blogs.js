@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import {
     ActionButton,
     ConfirmDialog,
@@ -16,8 +16,9 @@ import {
 import SearchIcon from '@mui/icons-material/Search';
 import CloseIcon from '@mui/icons-material/Close';
 import RecentActorsIcon from '@mui/icons-material/RecentActors';
-import { useRouter } from "next/router";
 import BlogForm from './forms/BlogForm';
+import { useQuery } from 'react-query';
+import { getBlogs } from '../../../utils/request_helpers';
 
 const users = [
     {
@@ -83,7 +84,6 @@ const users = [
 ];
 
 const AllBlogsTable = () => {
-    const router = useRouter();
     const [openPopUp, setOpenPopUp] = useState(false);
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" });
     const [confirmDialog, setConfirmDialog] = useState({ isOpen: false, title: "", subTitle: "" });
@@ -93,11 +93,20 @@ const AllBlogsTable = () => {
         fn: items => { return items; }
     });
 
+    const { data, isLoading } = useQuery(
+        'blogs',
+        getBlogs,
+        {
+            keepPreviousData: true,
+        }
+    );
+
+
     const headCells = [
-        { id: "fullName", label: "User Name" },
-        { id: "emailAddress", label: "User Email" },
-        { id: "role", label: "User Phone" },
-        { id: "department", label: "User Department" },
+        { id: "title", label: "Title" },
+        { id: "date", label: "Date" },
+        { id: "category", label: "Category" },
+        { id: "snippet", label: "Snippet" },
         { id: "actions", label: "Actions", disableSorting: true },
     ];
 
@@ -123,27 +132,14 @@ const AllBlogsTable = () => {
     }
 
     // close pop up
-    const handleOpenPopUP = () => {
+    const handleOpenPopUP = (item) => {
         setOpenPopUp(!openPopUp);
-        setRecordsForEdit(null);
-    }
-
-    // add or edit entry
-    const addOrEdit = (blog, handleResetForm) => {
-        handleResetForm();
-        setRecordsForEdit(null);
-        setOpenPopUp(false);
-        setRecords(null);
-        setNotify({
-            isOpen: true,
-            message: "Submitted Successfully",
-            type: "success"
-        })
+        setRecordsForEdit(item);
     }
 
     const handleUserClick = (item) => {
         // set the item to open in popup
-
+        handleOpenPopUP(item);
     }
 
     const onDelete = (id) => {
@@ -169,6 +165,12 @@ const AllBlogsTable = () => {
         })
     }
 
+    useEffect(() => {
+        if (data) {
+            setRecords(data.data);
+        }
+    }, [data]);
+
     return (
         <>
             <div className="bg-white dark:bg-gray-200 shadow-xl rounded-lg">
@@ -191,12 +193,12 @@ const AllBlogsTable = () => {
                         <TableHeader />
                         <TableBody>
                             {
-                                RecordsAfterPagingAndSorting().map((item) => (
-                                    <TableRow key={item.emailAddress}>
-                                        <TableCell>{item.fullName}</TableCell>
-                                        <TableCell>{item.emailAddress}</TableCell>
-                                        <TableCell>{item.phoneNumber}</TableCell>
-                                        <TableCell>{item.department}</TableCell>
+                                RecordsAfterPagingAndSorting()?.map((item) => (
+                                    <TableRow key={item?.date}>
+                                        <TableCell>{item?.title}</TableCell>
+                                        <TableCell>{item?.date}</TableCell>
+                                        <TableCell>{item?.category}</TableCell>
+                                        <TableCell>{item?.snippet}</TableCell>
                                         <TableCell>
                                             <div className="flex flex-row justify-between items-center space-x-1">
                                                 {/* edit */}
@@ -231,7 +233,6 @@ const AllBlogsTable = () => {
                     setOpenPopUp={setOpenPopUp}
                     title={"Blog Form"}>
                     <BlogForm
-                        addOrEdit={addOrEdit}
                         recordForEdit={recordsForEdit}
                     />
                 </PopUp>

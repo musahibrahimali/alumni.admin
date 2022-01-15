@@ -12,6 +12,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { setUser } from '../../../provider/provider';
 import { Notification } from '../../components';
 import { useRouter } from 'next/router';
+import axios from 'axios';
 
 const Sidebar = () => {
     const [notify, setNotify] = useState({ isOpen: false, message: "", type: "" }); // notification

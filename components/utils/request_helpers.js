@@ -15,8 +15,8 @@ export const fetchUserProfile = async () => {
 }
 
 // update admin profile
-export const updateAdminProfile = async (data) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+export const updateAdminProfile = async (id, data) => {
+    const url = `http://localhost:5000/admin/update-profile/${id}`;
     return await axios({
         method: 'PATCH',
         url,
@@ -26,13 +26,28 @@ export const updateAdminProfile = async (data) => {
             'Content-Type': 'application/json',
             'Access-Control-Allow-Origin': '*',
         },
-        data: JSON.stringify(data),
+        data: data,
+    });
+}
+// update admin profile
+export const updateAdminProfilePicture = async (id, data) => {
+    const url = `http://localhost:5000/admin/update-profile-picture/${id}`;
+    return await axios({
+        method: 'PATCH',
+        url,
+        withCredentials: true,
+        headers: {
+            "Accept": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
     });
 }
 
 // create blog
 export const createBlog = async (data) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = 'http://localhost:5000/blog/create-blog';
     return await axios({
         method: 'POST',
         url,
@@ -42,7 +57,23 @@ export const createBlog = async (data) => {
             'Content-Type': 'multipart/form-data',
             'Access-Control-Allow-Origin': '*',
         },
-        data: JSON.stringify(data),
+        data: data,
+    });
+}
+
+// update blog
+export const updateBlog = async (id, data) => {
+    const url = `http://localhost:5000/blog/update-blog/${id}`;
+    return await axios({
+        method: 'PATCH',
+        url,
+        withCredentials: true,
+        headers: {
+            "Accept": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
     });
 }
 
@@ -62,9 +93,25 @@ export const getBlogs = async () => {
     });
 }
 
+// update blog
+export const getBlogById = async (id) => {
+    const url = `http://localhost:5000/blog/update-blog/${id}`;
+    return await axios({
+        method: 'GET',
+        url,
+        withCredentials: true,
+        headers: {
+            "Accept": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
+    });
+}
+
 // delete job
 export const deleteBlog = async (id) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = `http://localhost:5000/blog/delete/${id}`;
     return await axios({
         method: 'DELETE',
         url,
@@ -79,7 +126,7 @@ export const deleteBlog = async (id) => {
 
 // create news
 export const createNews = async (data) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = 'http://localhost:5000/news/create-news';
     return await axios({
         method: 'POST',
         url,
@@ -89,13 +136,29 @@ export const createNews = async (data) => {
             'Content-Type': 'multipart/form-data',
             'Access-Control-Allow-Origin': '*',
         },
-        data: JSON.stringify(data),
+        data: data,
+    });
+}
+
+// update news
+export const updateNews = async (id, data) => {
+    const url = `http://localhost:5000/blog/update-news/${id}`;
+    return await axios({
+        method: 'PATCH',
+        url,
+        withCredentials: true,
+        headers: {
+            "Accept": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
     });
 }
 
 // get all news
 export const getNews = async () => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = 'http://localhost:5000/news/get-news';
     // make fetch request with axios
     return axios({
         url: url,
@@ -126,7 +189,7 @@ export const deleteNews = async (id) => {
 
 // create event
 export const createEvent = async (data) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = 'http://localhost:5000/event/create-event';
     return await axios({
         method: 'POST',
         url,
@@ -136,7 +199,23 @@ export const createEvent = async (data) => {
             'Content-Type': 'multipart/form-data',
             'Access-Control-Allow-Origin': '*',
         },
-        data: JSON.stringify(data),
+        data: data,
+    });
+}
+
+// update event
+export const updateEvent = async (id, data) => {
+    const url = `http://localhost:5000/blog/update-event/${id}`;
+    return await axios({
+        method: 'PATCH',
+        url,
+        withCredentials: true,
+        headers: {
+            "Accept": "application/json",
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
     });
 }
 
@@ -173,9 +252,25 @@ export const deleteEvent = async (id) => {
 
 // create job
 export const createJob = async (data) => {
-    const url = 'http://localhost:5000/blog/get-blogs';
+    const url = `http://localhost:5000/job/create-job`;
     return await axios({
         method: 'POST',
+        url,
+        withCredentials: true,
+        headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'multipart/form-data',
+            'Access-Control-Allow-Origin': '*',
+        },
+        data: data,
+    });
+}
+
+// update event
+export const updateJob = async (id, data) => {
+    const url = `http://localhost:5000/blog/update-job/${id}`;
+    return await axios({
+        method: 'PATCH',
         url,
         withCredentials: true,
         headers: {
@@ -183,7 +278,7 @@ export const createJob = async (data) => {
             'Content-Type': 'multipart/form-data',
             'Access-Control-Allow-Origin': '*',
         },
-        data: JSON.stringify(data),
+        data: data,
     });
 }
 
