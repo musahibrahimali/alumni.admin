@@ -4,7 +4,7 @@ import { QueryClient, QueryClientProvider } from 'react-query';
 import { ReactQueryDevtools } from 'react-query/devtools';
 import { useSelector } from "react-redux";
 
-// Create a client
+// Create a client with react query
 const queryClient = new QueryClient();
 
 const Admin = (props) => {
